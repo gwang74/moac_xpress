@@ -61,7 +61,23 @@ npm run addMonitorScs
 ```javascript
 npm run close
 ```
-
+#### 子链相关合约地址contract.json
+上述命令执行后会生成该文件
+```json
+{
+	"data": [
+		{
+			"vnodePoolAddr": "0x..."  // Vnode矿池合约地址
+		},
+		{
+			"scsPoolAddr": "0x..."  // 子链矿池地址
+		},
+		{
+			"microChainAddr": "0x..."  // 子链合约地址
+		}
+	]
+}
+```
 
 具体可查看
 [墨客链中文文档](https://moacdocs-chn.readthedocs.io/zh_CN/latest/index.html)
