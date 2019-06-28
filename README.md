@@ -1,5 +1,12 @@
 # moac_xpress
+
 在MOACCHAIN提供的[脚本](https://github.com/MOACChain/moac-core)基础上，完成的墨客子一键链搭建脚本。
+
+本脚本可完成的功能：
+1. 部署子链出块
+2. 添加新的子链
+3. 添加监听子链
+4. 关闭子链
 
 ---
 
