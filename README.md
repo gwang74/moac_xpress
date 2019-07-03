@@ -19,6 +19,7 @@ npm install
 {
 	"baseaddr": "0x...",  // 子链操作账号：进行创建合约，发起交易等基本操作
 	"basepsd": "123456",  // 操作账号对应keystone密码
+	"privatekey": "xxx",  // 操作账号密钥，不带"0x"
 	// scs节点
 	"scs": [
 		"0x...",
@@ -38,8 +39,8 @@ npm install
 		"0x...",
 		"0x..."
 	],
-	"monitorAddr": "0x...",  // 用于监听的子链
-	"monitorLink": "127.0.0.1:8546" // 监听子链的rpc接口
+	"monitorAddr": "0x...",  // 用于监听的节点
+	"monitorLink": "127.0.0.1:8546" // 监听节点的rpc接口
 }
 ```
 

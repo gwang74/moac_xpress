@@ -33,7 +33,7 @@ if (!chain3.isConnected()) {
 }
 
 // Unlock the baseaddr for contract deployment
-utils.unlockAccount(baseaddr, basepsd);
+// utils.unlockAccount(baseaddr, basepsd);
 
 // Check to make sure all SCSs have enough balance than the min deposit required by 
 // SCS pool

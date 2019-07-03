@@ -24,6 +24,9 @@
   "homepage": "https://github.com/gwang74/moac_xpress#readme",
   "dependencies": {
     "chain3": "^0.1.16",
+    "ethereumjs-wallet": "^0.6.3",
+    "keythereum": "^1.0.4",
+    "moac-tx": "^0.1.0",
     "path": "^0.12.7",
     "solc": "^0.4.24"
   }

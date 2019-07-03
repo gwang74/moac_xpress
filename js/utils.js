@@ -2,11 +2,13 @@ const Chain3 = require('chain3');
 const fs = require('fs');
 const solc = require('solc');
 const path = require('path');
+const Transaction = require('moac-tx')
 
 const initConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../initConfig.json"), 'utf8'));
 const baseaddr = initConfig["baseaddr"];
 const minScsDeposit = initConfig["minScsDeposit"];
 const vnodeUri = initConfig["vnodeUri"];
+const privatekey = initConfig["privatekey"];
 
 let chain3 = new Chain3();
 chain3.setProvider(new chain3.providers.HttpProvider(vnodeUri));
@@ -18,20 +20,69 @@ if (!chain3.isConnected()) {
 }
 
 //===============Common Utils=======================================
+// function sendtx(src, tgtaddr, amount, strData) {
+
+//     var transHash = chain3.mc.sendTransaction(
+//         {
+//             from: src,
+//             value: chain3.toSha(amount, 'mc'),
+//             to: tgtaddr,
+//             gas: "2000000",
+//             gasPrice: chain3.mc.gasPrice,
+//             data: strData
+//         });
+
+//     console.log('sending from:' + src + ' to:' + tgtaddr + ' amount:' + amount + ' with data:' + strData);
+//     waitBlockForTransaction(transHash);
+// }
+
 function sendtx(src, tgtaddr, amount, strData) {
 
-    var transHash = chain3.mc.sendTransaction(
-        {
-            from: src,
-            value: chain3.toSha(amount, 'mc'),
-            to: tgtaddr,
-            gas: "2000000",
-            gasPrice: chain3.mc.gasPrice,
-            data: strData
-        });
+    let params = {
+        nonce: chain3.toHex(getNonce(src)),
+        value: chain3.toHex(chain3.toSha(amount, 'mc')),
+        to: tgtaddr,
+        gas: chain3.toHex("2000000"),
+        gasPrice: chain3.toHex(chain3.mc.gasPrice),
+        chainId: chain3.toHex(chain3.version.network),
+        data: strData
+    };
 
+    const tx = new Transaction(params);
+    tx.setChainId(chain3.version.network);
+    tx.sign(Buffer.from(privatekey, 'hex'));
+    const signedTx = tx.serialize();
+    var transHash = chain3.mc.sendRawTransaction('0x' + signedTx.toString('hex'));
     console.log('sending from:' + src + ' to:' + tgtaddr + ' amount:' + amount + ' with data:' + strData);
     waitBlockForTransaction(transHash);
+}
+
+function getNonce(src) {
+
+    var count = chain3.mc.getTransactionCount(src);
+    var res = chain3.currentProvider.sendAsync({
+        id: new Date().getTime(),
+        jsonrpc: "2.0",
+        method: "txpool_content",
+        params: []
+    });
+    console.log(res);
+    if (res && res.result.pending) {
+        if (pendings) {
+            const keys = Object.keys(pendings);
+            for (const index in keys) {
+                /* istanbul ignore else  */
+                if (keys.hasOwnProperty(index)) {
+                    const key = keys[index];
+                    if (key.toLowerCase() === address.toLowerCase()) {
+                        count = count + Object.keys(pendings[key]).length;
+                    }
+                }
+            }
+        }
+    }
+    console.log("nonce", count);
+    return count;
 }
 
 function checkBalance(inaddr, inMcAmt) {
@@ -93,7 +144,7 @@ function waitBlockForContract(transactionHash) {
 
 
 function waitBlockForTransaction(transactionHash) {
-    console.log("Waiting a mined block to include your contract...");
+    console.log("Waiting a mined block to include ", transactionHash);
 
     while (true) {
         let receipt = chain3.mc.getTransactionReceipt(transactionHash);

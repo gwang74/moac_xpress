@@ -83,7 +83,7 @@ if (!utils.checkBalance(baseaddr, needMoac)) {
 }
 
 // Unlock the baseaddr for contract deployment
-utils.unlockAccount(baseaddr, basepsd);
+// utils.unlockAccount(baseaddr, basepsd);
 
 //===============Step 1. Deploy required Mother Chain contracts=========================
 // If you have all these contracts deployed earlier, you can skip this and go to Step 2.

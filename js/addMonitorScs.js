@@ -29,7 +29,7 @@ if (!chain3.isConnected()) {
 }
 
 // Unlock the baseaddr for contract deployment
-utils.unlockAccount(baseaddr, basepsd);
+// utils.unlockAccount(baseaddr, basepsd);
 
 var subchainbase = utils.deployMicroChainWithAddr();
 var data = subchainbase.registerAsMonitor.getData(monitorAddr, monitorLink);

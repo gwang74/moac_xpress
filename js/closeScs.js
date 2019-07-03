@@ -29,7 +29,7 @@ if (!chain3.isConnected()) {
 }
 
 // Unlock the baseaddr for contract deployment
-utils.unlockAccount(baseaddr, basepsd); 
+// utils.unlockAccount(baseaddr, basepsd); 
 var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../contract.json"), 'utf8'));
 utils.sendtx(baseaddr, config.data[2]['microChainAddr'], 0, '0x43d726d6');
 console.log("waiting for a flush!!!");
