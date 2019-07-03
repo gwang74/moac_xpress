@@ -3,10 +3,10 @@
 在MOACCHAIN提供的[脚本](https://github.com/MOACChain/moac-core)基础上，完成的墨客子一键链搭建脚本。
 
 本脚本可完成的功能：
-1. 部署子链出块
-2. 添加新的子链
-3. 添加监听子链
-4. 关闭子链
+1. 子链部署出块
+2. 子链添加新的节点
+3. 子链添加监听节点
+4. 子链关闭
 
 ---
 
@@ -44,20 +44,20 @@ npm install
 ```
 
 ### 脚本使用
-#### 部署子链
+#### 子链部署出块
 ```javascript
 npm run start
 ```
 
-#### 添加子链
+#### 子链添加节点
 ```javascript
 npm run addScs
 ```
-#### 添加监听子链
+#### 子链添加监听节点
 ```javascript
 npm run addMonitorScs
 ```
-#### 关闭子链
+#### 子链关闭
 ```javascript
 npm run close
 ```

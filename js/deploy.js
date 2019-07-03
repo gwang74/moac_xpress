@@ -207,8 +207,8 @@ function deployvnodepool() {
   // Check for the two POO contract deployments
   var vnodePoolAddr = utils.waitBlockForContract(vnodeprotocolbase.transactionHash);
   wirteJson({ "vnodePoolAddr": vnodePoolAddr });
-
-  console.log("vnodeprotocolbase contract address:", vnodePoolAddr);
+  vnodeprotocolbase = vnodeprotocolbaseContract.at(vnodePoolAddr)
+  console.log("vnodeprotocolbase contract address:", vnodeprotocolbase.address);
 
   return vnodeprotocolbase;
 }
@@ -247,7 +247,8 @@ function deployscspool() {
   var scsPoolAddr = utils.waitBlockForContract(subchainprotocolbase.transactionHash);
   wirteJson({ "scsPoolAddr": scsPoolAddr });
 
-  console.log("subchainprotocolbase contract address:", scsPoolAddr);
+  subchainprotocolbase = subchainprotocolbaseContract.at(scsPoolAddr);
+  console.log("subchainprotocolbase contract address:", subchainprotocolbaseContract.address);
   console.log("Please use the mined contract addresses in deploying the MicroChain contract!!!")
 
   return subchainprotocolbase;
@@ -303,8 +304,8 @@ function deployMicroChain() {
 
   var microChainAddr = utils.waitBlockForContract(subchainbase.transactionHash);
   wirteJson({ "microChainAddr": microChainAddr });
-
-  console.log("microChain created at address:", microChainAddr);
+  subchainbase = subchainbaseContract.at(microChainAddr);
+  console.log("microChain created at address:", subchainbase.address);
 
   return subchainbase;
 }
