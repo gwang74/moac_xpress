@@ -2,7 +2,6 @@ const Chain3 = require('chain3');
 const fs = require('fs');
 const solc = require('solc');
 const path = require('path');
-const Transaction = require('moac-tx')
 
 const initConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../initConfig.json"), 'utf8'));
 const baseaddr = initConfig["baseaddr"];
@@ -38,21 +37,17 @@ if (!chain3.isConnected()) {
 
 function sendtx(src, tgtaddr, amount, strData) {
 
-    let params = {
+    let rawTx = {
         nonce: chain3.toHex(getNonce(src)),
         value: chain3.toHex(chain3.toSha(amount, 'mc')),
         to: tgtaddr,
-        gas: chain3.toHex("2000000"),
+        gasLimit: chain3.toHex("2000000"),
         gasPrice: chain3.toHex(chain3.mc.gasPrice),
         chainId: chain3.toHex(chain3.version.network),
         data: strData
     };
-
-    const tx = new Transaction(params);
-    tx.setChainId(chain3.version.network);
-    tx.sign(Buffer.from(privatekey, 'hex'));
-    const signedTx = tx.serialize();
-    var transHash = chain3.mc.sendRawTransaction('0x' + signedTx.toString('hex'));
+    let signtx = chain3.signTransaction(rawTx, privatekey);
+    var transHash = chain3.mc.sendRawTransaction(signtx);
     console.log('sending from:' + src + ' to:' + tgtaddr + ' amount:' + amount + ' with data:' + strData);
     waitBlockForTransaction(transHash);
 }
@@ -60,26 +55,30 @@ function sendtx(src, tgtaddr, amount, strData) {
 function getNonce(src) {
 
     var count = chain3.mc.getTransactionCount(src);
-    var res = chain3.currentProvider.sendAsync({
-        id: new Date().getTime(),
-        jsonrpc: "2.0",
-        method: "txpool_content",
-        params: []
-    });
-    console.log(res);
-    if (res && res.result.pending) {
-        if (pendings) {
-            const keys = Object.keys(pendings);
-            for (const index in keys) {
-                /* istanbul ignore else  */
-                if (keys.hasOwnProperty(index)) {
-                    const key = keys[index];
-                    if (key.toLowerCase() === address.toLowerCase()) {
-                        count = count + Object.keys(pendings[key]).length;
+    try {
+        var res = chain3.currentProvider.send({
+            id: new Date().getTime(),
+            jsonrpc: "2.0",
+            method: "txpool_content",
+            params: []
+        });
+        if (res && res.result && res.result.pending) {
+            var pendings = res.result.pending;
+            if (pendings) {
+                const keys = Object.keys(pendings);
+                for (const index in keys) {
+                    /* istanbul ignore else  */
+                    if (keys.hasOwnProperty(index)) {
+                        const key = keys[index];
+                        if (key.toLowerCase() === address.toLowerCase()) {
+                            count = count + Object.keys(pendings[key]).length;
+                        }
                     }
                 }
             }
         }
+    } catch (error) {
+        console.log(error);
     }
     console.log("nonce", count);
     return count;
@@ -132,8 +131,11 @@ function waitBlockForContract(transactionHash) {
 
     while (true) {
         let receipt = chain3.mc.getTransactionReceipt(transactionHash);
-        if (receipt && receipt.contractAddress) {
+        if (receipt && chain3.fromDecimal(receipt.status) == 1 && receipt.contractAddress) {
             console.log("contract has been deployed at " + receipt.contractAddress);
+            break;
+        } else if (receipt && chain3.fromDecimal(receipt.status) == 0) {
+            console.log("contract deploy failed!!!");
             break;
         }
         console.log("block " + chain3.mc.blockNumber + "...");
@@ -265,6 +267,7 @@ function vnoderegister(vnode, num, ip, via, rpcLink) {
 
 module.exports = {
     sendtx,
+    getNonce,
     checkBalance,
     waitBalance,
     waitForBlocks,

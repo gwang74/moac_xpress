@@ -30,8 +30,7 @@ const path = require('path');
 // need to have a valid account to use for contracts deployment
 const initConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../initConfig.json"), 'utf8'));
 const baseaddr = initConfig["baseaddr"];
-console.log(baseaddr);
-const basepsd = initConfig["basepsd"];
+const privatekey = initConfig["privatekey"];
 
 // The known SCS on MOAC network
 var scs = initConfig["scs"];
@@ -76,7 +75,7 @@ if (!chain3.isConnected()) {
 // + MicroChain deposit (10 mc)
 var needMoac = Number(scs.length * minScsDeposit) + Number(minVnodeDeposit) + Number(scs.length * microChainDeposit);
 if (!utils.checkBalance(baseaddr, needMoac)) {
-  console.log("Need more balance in baseaddr")
+  console.log("Need more balance in baseaddr," + needMoac + " mc at least!")
   return;
 } else {
   console.log("baseaddr has enough balance!")
@@ -193,19 +192,33 @@ function deployvnodepool() {
 
   var vnodeprotocolbaseContract = chain3.mc.contract(JSON.parse(abi));
 
-  var vnodeprotocolbase = vnodeprotocolbaseContract.new(
-    minVnodeDeposit,
-    {
-      from: baseaddr,
-      data: '0x' + bin,
-      gas: '8000000'
-    }
-  );
+  // var vnodeprotocolbase = vnodeprotocolbaseContract.new(
+  //   minVnodeDeposit,
+  //   {
+  //     from: baseaddr,
+  //     data: '0x' + bin,
+  //     gas: '8000000'
+  //   }
+  // );
 
-  console.log("VNODE protocol is being deployed at transaction HASH: " + vnodeprotocolbase.transactionHash);
+  var types = ['uint256'];
+  var args = [minVnodeDeposit];
+  let parameter = chain3.encodeParams(types, args);
+  let rawTx = {
+    nonce: chain3.toHex(utils.getNonce(baseaddr)),
+    gasLimit: chain3.toHex("9000000"),
+    gasPrice: chain3.toHex(chain3.mc.gasPrice),
+    chainId: chain3.toHex(chain3.version.network),
+    data: '0x' + bin + parameter
+  };
+
+  let signtx = chain3.signTransaction(rawTx, privatekey);
+  var transHash = chain3.mc.sendRawTransaction(signtx);
+
+  console.log("VNODE protocol is being deployed at transaction HASH: " + transHash);
 
   // Check for the two POO contract deployments
-  var vnodePoolAddr = utils.waitBlockForContract(vnodeprotocolbase.transactionHash);
+  var vnodePoolAddr = utils.waitBlockForContract(transHash);
   wirteJson({ "vnodePoolAddr": vnodePoolAddr });
   vnodeprotocolbase = vnodeprotocolbaseContract.at(vnodePoolAddr)
   console.log("vnodeprotocolbase contract address:", vnodeprotocolbase.address);
@@ -231,20 +244,34 @@ function deployscspool() {
 
   var subchainprotocolbaseContract = chain3.mc.contract(JSON.parse(abi));
 
-  var subchainprotocolbase = subchainprotocolbaseContract.new(
-    protocol,
-    minScsDeposit,
-    _protocolType,
-    {
-      from: baseaddr,
-      data: '0x' + bin,
-      gas: '8000000'
-    }
-  );
+  // var subchainprotocolbase = subchainprotocolbaseContract.new(
+  //   protocol,
+  //   minScsDeposit,
+  //   _protocolType,
+  //   {
+  //     from: baseaddr,
+  //     data: '0x' + bin,
+  //     gas: '8000000'
+  //   }
+  // );
 
-  console.log("SCS protocol is being deployed at transaction HASH: " + subchainprotocolbase.transactionHash);
+  var types = ['string', 'uint256', 'uint256'];
+  var args = [protocol, minScsDeposit, _protocolType];
+  let parameter = chain3.encodeParams(types, args);
+  let rawTx = {
+    nonce: chain3.toHex(utils.getNonce(baseaddr)),
+    gasLimit: chain3.toHex("9000000"),
+    gasPrice: chain3.toHex(chain3.mc.gasPrice),
+    chainId: chain3.toHex(chain3.version.network),
+    data: '0x' + bin + parameter
+  };
 
-  var scsPoolAddr = utils.waitBlockForContract(subchainprotocolbase.transactionHash);
+  let signtx = chain3.signTransaction(rawTx, privatekey);
+  var transHash = chain3.mc.sendRawTransaction(signtx);
+
+  console.log("SCS protocol is being deployed at transaction HASH: " + transHash);
+
+  var scsPoolAddr = utils.waitBlockForContract(transHash);
   wirteJson({ "scsPoolAddr": scsPoolAddr });
 
   subchainprotocolbase = subchainprotocolbaseContract.at(scsPoolAddr);
@@ -286,23 +313,37 @@ function deployMicroChain() {
 
   var subchainbaseContract = chain3.mc.contract(JSON.parse(abi));
   var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../contract.json"), 'utf8'));
-  var subchainbase = subchainbaseContract.new(
-    config.data[1]['scsPoolAddr'],
-    config.data[0]['vnodePoolAddr'],
-    min,
-    max,
-    thousandth,
-    flushRound,
-    tokensupply,
-    exchangerate,
-    {
-      from: baseaddr,
-      data: '0x' + bin,
-      gas: '9000000'
-    }
-  );
+  // var subchainbase = subchainbaseContract.new(
+  //   config.data[1]['scsPoolAddr'],
+  //   config.data[0]['vnodePoolAddr'],
+  //   min,
+  //   max,
+  //   thousandth,
+  //   flushRound,
+  //   tokensupply,
+  //   exchangerate,
+  //   {
+  //     from: baseaddr,
+  //     data: '0x' + bin,
+  //     gas: '9000000'
+  //   }
+  // );
 
-  var microChainAddr = utils.waitBlockForContract(subchainbase.transactionHash);
+  var types = ['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'];
+  var args = [config.data[1]['scsPoolAddr'], config.data[0]['vnodePoolAddr'], min, max, thousandth, flushRound, tokensupply, exchangerate];
+  let parameter = chain3.encodeParams(types, args);
+  let rawTx = {
+    nonce: chain3.toHex(utils.getNonce(baseaddr)),
+    gasLimit: chain3.toHex("9000000"),
+    gasPrice: chain3.toHex(chain3.mc.gasPrice),
+    chainId: chain3.toHex(chain3.version.network),
+    data: '0x' + bin + parameter
+  };
+
+  let signtx = chain3.signTransaction(rawTx, privatekey);
+  var transHash = chain3.mc.sendRawTransaction(signtx);
+
+  var microChainAddr = utils.waitBlockForContract(transHash);
   wirteJson({ "microChainAddr": microChainAddr });
   subchainbase = subchainbaseContract.at(microChainAddr);
   console.log("microChain created at address:", subchainbase.address);

@@ -1,13 +1,12 @@
 {
-	"baseaddr": "0x7a2dc129b3d794e4e8a009c83ffd7a2412f5e326",
-	"basepsd": "123456",
-	"privatekey": "86736091a441dffeb8656e731474433aaf531c4adab0497fa38d36215f44f18d",
+	"baseaddr": "0x..",
+	"privatekey": "xxx",
 	"scs": [
-		"0x5BFc35a786a7C4c2ea03446225d248a08d12548A",
-		"0x9a4E15A2e31464AF43826d0f6D9c3ddf876Fa4B0",
-		"0xdb2ccEf0F5455b7B2853B7001740C3b96a71A1Bf"
+		"0x...",
+		"0x...",
+		"0x..."
 	],
-	"vnodeVia": "0x5e2e03d1fb8aed9dbbd939fcc1a9f2aa9afdfde4",
+	"vnodeVia": "0x...",
 	"vnodeUri": "http://127.0.0.1:8545",
 	"vnodeConnectUrl": "127.0.0.1:50062",
 	"minScsRequired": 3,
@@ -16,9 +15,8 @@
 	"minScsDeposit": 1,
 	"microChainDeposit": 1,
 	"addScs": [
-		"0x50bCc52424DF81d95f03BE1d45c89F4E173Ee349",
-		"0x7eB7554E3C2C514f84d88FbE4CC12E41903725C5"
+		"0x..."
 	],
-	"monitorAddr": "0x974f61ffc0d6c872ba7c7D927fadB8f95ccFf580",
-	"monitorLink": "192.168.1.102:8546"
+	"monitorAddr": "0x...",
+	"monitorLink": "127.0.0.1:8546"
 }
