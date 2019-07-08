@@ -3,13 +3,14 @@ var fs = require('fs');
 var solc = require('solc');
 var path = require('path');
 var logger = require('./logger');
+var nconf = require('nconf');
 // const ws = require('./wss').ws
 
-const initConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../initConfig.json"), 'utf8'));
-const baseaddr = initConfig["baseaddr"];
-const minScsDeposit = initConfig["minScsDeposit"];
-const vnodeUri = initConfig["vnodeUri"];
-const privatekey = initConfig["privatekey"];
+nconf.file({ file: path.resolve(__dirname, "../../initConfig.json") });
+const baseaddr = nconf.get("baseaddr");
+const minScsDeposit = nconf.get("minScsDeposit");
+const vnodeUri = nconf.get("vnodeUri");
+const privatekey = nconf.get("privatekey");
 
 var chain3 = new Chain3();
 chain3.setProvider(new chain3.providers.HttpProvider(vnodeUri));
@@ -278,5 +279,6 @@ module.exports = {
     registerClose,
     addMicroChainFund,
     vnoderegister,
-    chain3
+    chain3,
+    nconf
 }

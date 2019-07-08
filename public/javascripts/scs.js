@@ -29,30 +29,28 @@ var logger = require('./logger');
 
 //===============Setup the Parameters==========================================
 // need to have a valid account to use for contracts deployment
-const initConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../initConfig.json"), 'utf8'));
-const baseaddr = initConfig["baseaddr"];
-// ws.client.send(baseaddr);
-const privatekey = initConfig["privatekey"];
-const monitorAddr = initConfig["monitorAddr"];
-const monitorLink = initConfig["monitorLink"];
-const addScs = initConfig["addScs"];
+const baseaddr = utils.nconf.get("baseaddr");
+const privatekey = utils.nconf.get("privatekey");
+const monitorAddr = utils.nconf.get("monitorAddr");
+const monitorLink = utils.nconf.get("monitorLink");
+const addScs = utils.nconf.get("addScs");
 
 // The VNODE benificial address, should be found in the vnodeconfig.json 
-const vnodeVia = initConfig["vnodeVia"];
-const vnodeConnectUrl = initConfig["vnodeConnectUrl"];//VNODE connection as parameter to use for VNODE protocols
-const minScsRequired = initConfig["minScsRequired"]; // Min number of SCSs in the MicroChain, recommended 3 or more
-const rpcLink = initConfig["rpcLink"];
+const vnodeVia = utils.nconf.get("vnodeVia");
+const vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");//VNODE connection as parameter to use for VNODE protocols
+const minScsRequired = utils.nconf.get("minScsRequired");// Min number of SCSs in the MicroChain, recommended 3 or more
+const rpcLink = utils.nconf.get("rpcLink");
 
-const minVnodeDeposit = initConfig["minVnodeDeposit"];// number of deposit required for the VNODE proxy to register, unit is mc
-const minScsDeposit = initConfig["minScsDeposit"];// SCS must pay more than this in the register function to get into the SCS pool
-const microChainDeposit = initConfig["microChainDeposit"];// The deposit is required for each SCS to join the MicroChain
+const minVnodeDeposit = utils.nconf.get("minVnodeDeposit");// number of deposit required for the VNODE proxy to register, unit is mc
+const minScsDeposit = utils.nconf.get("minScsDeposit");// SCS must pay more than this in the register function to get into the SCS pool
+const microChainDeposit = utils.nconf.get("microChainDeposit");// The deposit is required for each SCS to join the MicroChain
 
 //===============Check the Blockchain connection===============================
 
 function deploy(req, result, next) {
     // The known SCS on MOAC network
-    result.send('deploy start!!!');
-    var scs = initConfig["scs"];
+    // result.send('deploy start!!!');
+    var scs = utils.nconf.get("scs");
     if (scs.length == 0) {
         logger.info("Need scs in initConfig .json!!!");
         return;
