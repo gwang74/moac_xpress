@@ -18,8 +18,7 @@ npm install
 ```json
 {
 	"baseaddr": "0x...",  // 子链操作账号：进行创建合约，发起交易等基本操作
-	"basepsd": "123456",  // 操作账号对应keystone密码
-	"privatekey": "xxx",  // 操作账号密钥，不带"0x"
+	"privatekey": "xxx",  // 操作账号密钥
 	// scs节点
 	"scs": [
 		"0x...",

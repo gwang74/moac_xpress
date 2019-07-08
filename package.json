@@ -1,32 +1,27 @@
 {
-  "name": "moacxpress",
-  "version": "1.0.0",
-  "description": "墨客子一键链搭建脚本",
+  "name": "moac-xpress",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "start": "node ./js/deploy.js",
-    "addScs": "node ./js/addScs.js",
-    "addMonitorScs": "node ./js/addMonitorScs.js",
-    "close": "node ./js/closeMicroChain.js"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gwang74/moac_xpress.git"
-  },
-  "keywords": [
-    "moac",
-    "nodejs"
-  ],
-  "author": "https://github.com/gwang74",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/gwang74/moac_xpress/issues"
-  },
-  "homepage": "https://github.com/gwang74/moac_xpress#readme",
   "dependencies": {
     "chain3": "^0.1.16",
+    "child_process": "^1.0.2",
+    "cookie-parser": "~1.4.4",
+    "dateformat": "^2.0.0",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
     "ethereumjs-wallet": "^0.6.3",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
     "keythereum": "^1.0.4",
+    "morgan": "~1.9.1",
     "path": "^0.12.7",
-    "solc": "^0.4.24"
+    "solc": "^0.4.24",
+    "ssh2": "^0.8.4",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6",
+    "ws": "^7.0.1"
   }
 }
