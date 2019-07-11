@@ -1,0 +1,30 @@
+{
+  "name": "moacxpress",
+  "version": "1.0.0",
+  "description": "墨客子一键链搭建脚本",
+  "scripts": {
+    "start": "node ./js/deploy.js",
+    "addScs": "node ./js/addScs.js",
+    "addMonitorScs": "node ./js/addMonitorScs.js",
+    "close": "node ./js/closeScs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gwang74/moac_xpress.git"
+  },
+  "keywords": [
+    "moac",
+    "nodejs"
+  ],
+  "author": "https://github.com/gwang74",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gwang74/moac_xpress/issues"
+  },
+  "homepage": "https://github.com/gwang74/moac_xpress#readme",
+  "dependencies": {
+    "chain3": "^0.1.16",
+    "path": "^0.12.7",
+    "solc": "^0.4.24"
+  }
+}
