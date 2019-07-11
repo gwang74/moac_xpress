@@ -254,12 +254,11 @@ export default {
                 console.log(res);
                 this.$message({
                 type: "info",
-                message: "转账成功",
-                duration: 1600,
-                showClose: true
+                message: "转账成功"
               })   
               },function(res){
                   console.log(res.status);
+                  this.$message.error('部署失败');
               })
             }    
         }
@@ -326,6 +325,7 @@ export default {
               }    
           },function(res){
               console.log(res.status);
+              this.$message.error('关闭操作未成功');
           });
     },
     clear() {
