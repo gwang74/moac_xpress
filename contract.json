@@ -1,13 +1,3 @@
 {
-	"data": [
-		{
-			"vnodePoolAddr": "0x1dab23d2085f75f561e99bdedb9744706bdfb7c8"
-		},
-		{
-			"scsPoolAddr": "0x8f799ffb99f4aea8df16f57eb2705f704776d143"
-		},
-		{
-			"microChainAddr": "0x33a2fea3a129f68455a7600cab9a337045607c18"
-		}
-	]
+	"data": []
 }

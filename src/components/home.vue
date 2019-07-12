@@ -218,8 +218,16 @@ export default {
     };
   },
   created() {
+    
   },
   methods: {
+    getInitConfig(){
+       this.$http.get(this.url+"/getInitConfig").then(function(res){
+              console.log(res.body);    
+          },function(){
+              console.log('请求失败处理');
+          });
+    },
     getScsNumber(){
       var length = this.configData.scs.length;
       var number = Number(this.configData.minScsRequired);

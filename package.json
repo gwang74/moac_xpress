@@ -1,6 +1,5 @@
 {
     "name": "moacxpress",
-    "version": "1.0.0",
     "description": "墨客子一键链搭建脚本",
     "author": "https://github.com/gwang74",
     "private": true,
@@ -11,15 +10,12 @@
     "homepage": "https://github.com/gwang74/moac_xpress#readme",
     "scripts": {
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-        "start": "node ./js/deploy.js",
         "unit": "jest --config test/unit/jest.conf.js --coverage",
         "e2e": "node test/e2e/runner.js",
         "test": "npm run unit && npm run e2e",
         "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
         "build": "node build/build.js",
-        "addScs": "node ./js/addScs.js",
-        "addMonitorScs": "node ./js/addMonitorScs.js",
-        "close": "node ./js/closeScs.js"
+        "start": "node ./bin/www"
     },
     "repository": {
         "type": "git",
@@ -29,18 +25,8 @@
         "moac",
         "nodejs"
     ],
-    "dependencies": {
-        "chain3": "^0.1.16",
-        "element-ui": "^2.10.0",
-        "node-sass": "^4.12.0",
-        "path": "^0.12.7",
-        "sass-loader": "^7.1.0",
-        "solc": "^0.4.24",
-        "vue": "^2.5.2",
-        "vue-resource": "^1.5.1",
-        "vue-router": "^3.0.1"
-    },
     "devDependencies": {
+        "address": "^1.1.0",
         "autoprefixer": "^7.1.2",
         "babel-core": "^6.22.1",
         "babel-eslint": "^8.2.1",
@@ -77,6 +63,7 @@
         "jest-serializer-vue": "^0.3.0",
         "nightwatch": "^0.9.12",
         "node-notifier": "^5.1.2",
+        "opn": "^6.0.0",
         "optimize-css-assets-webpack-plugin": "^3.2.0",
         "ora": "^1.2.0",
         "portfinder": "^1.0.13",
@@ -106,5 +93,32 @@
         "> 1%",
         "last 2 versions",
         "not ie <= 8"
-    ]
+    ],
+    "version": "0.0.0",
+    "dependencies": {
+        "chain3": "^0.1.16",
+        "child_process": "^1.0.2",
+        "cookie-parser": "~1.4.4",
+        "dateformat": "^2.0.0",
+        "debug": "~2.6.9",
+        "ejs": "~2.6.1",
+        "ethereumjs-wallet": "^0.6.3",
+        "express": "~4.16.1",
+        "http-errors": "~1.6.3",
+        "keythereum": "^1.0.4",
+        "morgan": "~1.9.1",
+        "nconf": "^0.10.0",
+        "path": "^0.12.7",
+        "solc": "^0.4.24",
+        "ssh2": "^0.8.4",
+        "winston": "^2.3.1",
+        "winston-daily-rotate-file": "^1.4.6",
+        "ws": "^7.0.1",
+        "element-ui": "^2.10.0",
+        "node-sass": "^4.12.0",
+        "sass-loader": "^7.1.0",
+        "vue": "^2.5.2",
+        "vue-resource": "^1.5.1",
+        "vue-router": "^3.0.1"
+    }
 }
