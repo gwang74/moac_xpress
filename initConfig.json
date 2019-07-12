@@ -1,22 +1,22 @@
 {
-	"baseaddr": "0x..",
-	"privatekey": "xxx",
-	"scs": [
-		"0x...",
-		"0x...",
-		"0x..."
-	],
-	"vnodeVia": "0x...",
-	"vnodeUri": "http://127.0.0.1:8545",
-	"vnodeConnectUrl": "127.0.0.1:50062",
-	"minScsRequired": 3,
-	"rpcLink": "",
-	"minVnodeDeposit": 1,
-	"minScsDeposit": 1,
-	"microChainDeposit": 1,
-	"addScs": [
-		"0x..."
-	],
-	"monitorAddr": "0x...",
-	"monitorLink": "127.0.0.1:8546"
+    "baseaddr": "0x..",
+    "privatekey": "xxx",
+    "scs": [
+        "0x...",
+        "0x...",
+        "0x..."
+    ],
+    "vnodeVia": "0x...",
+    "vnodeUri": "http://192.168.1.105:8545",
+    "vnodeConnectUrl": "127.0.0.1:50062",
+    "minScsRequired": 3,
+    "rpcLink": "",
+    "minVnodeDeposit": 1,
+    "minScsDeposit": 1,
+    "microChainDeposit": 1,
+    "addScs": [
+        "0x..."
+    ],
+    "monitorAddr": "0x...",
+    "monitorLink": "127.0.0.1:8546"
 }

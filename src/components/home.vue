@@ -122,7 +122,6 @@
 </template>
 
 <script>
-import { getData } from "../js/hander";
 export default {
   name: "home",
   data() {
@@ -218,12 +217,13 @@ export default {
     };
   },
   created() {
-    
+    this.getInitConfig();
   },
   methods: {
     getInitConfig(){
        this.$http.get(this.url+"/getInitConfig").then(function(res){
-              console.log(res.body);    
+              console.log(res.body); 
+              this.configData = res.body;   
           },function(){
               console.log('请求失败处理');
           });
