@@ -67,9 +67,11 @@ function deploy(req, result, next) {
     var needMoac = Number(scs.length * minScsDeposit) + Number(minVnodeDeposit) + Number(scs.length * microChainDeposit);
     if (!utils.checkBalance(baseaddr, needMoac)) {
         logger.info("Need more balance in baseaddr," + needMoac + " mc at least!");
+        result.send("{status:'error', msg:'操作账号moac不足！'}")
         return;
     } else {
         logger.info("baseaddr has enough balance!");
+        result.send("status:'ok', msg:'开始部署！' ");
     }
 
     // Unlock the baseaddr for contract deployment
@@ -91,6 +93,7 @@ function deploy(req, result, next) {
     } else {
         // Add balance to microChainAddr for MicroChain running
         logger.info("Add funding to microChain!");
+        result.send("status:'error', msg:'添加保证金到微链！' ");
         utils.addMicroChainFund(microChain.address, microChainDeposit)
         utils.waitBalance(microChain.address, microChainDeposit);
     }
@@ -101,6 +104,7 @@ function deploy(req, result, next) {
     } else {
         // Add balance
         logger.info("Add funding to VNODE!");
+        result.send("status:'error', msg:'添加保证金到Vnode节点！' ");
         utils.sendtx(baseaddr, vnodeVia, minVnodeDeposit);
         utils.waitBalance(vnodeVia, minVnodeDeposit);
     }
@@ -114,6 +118,7 @@ function deploy(req, result, next) {
         } else {
             // Add balance
             logger.info("Add funding to SCS!");
+            result.send("status:'error', msg:'添加保证金到SCS子链:' " + scs[i] + "!'");
             utils.sendtx(baseaddr, scs[i], minScsDeposit);
             utils.waitBalance(scs[i], minScsDeposit);
         }
@@ -132,6 +137,7 @@ function deploy(req, result, next) {
             break;
         }
         logger.info("Waiting registertopool, current scs count=" + count);
+        result.send("status:'error', msg:'等待中，当前子链数：'" + count + "!'");
         utils.sleep(5000);
     }
 
@@ -147,12 +153,14 @@ function deploy(req, result, next) {
             break;
         }
         logger.info("Waiting microChain, current scs count=" + count);
+        result.send("status:'error', msg:'等待中，当前子链数：'" + count + "!'");
         utils.sleep(5000);
     }
 
     utils.registerClose(microChain.address);
 
     logger.info("all Done!!!");
+    result.send("status:'success', msg:'部署完成");
 }
 
 function addMonitor(req, res, next) {
@@ -161,12 +169,14 @@ function addMonitor(req, res, next) {
     utils.sendtx(baseaddr, subchainbase.address, 1, data);
     logger.info(subchainbase.getMonitorInfo.call());
     logger.info("add a monitor scs successfully!!!");
-    res.send("add a monitor scs successfully!!!");
+    res.send("status:'success', msg:'添加监听子链完成！'");
 }
 
 function addScss(req, res, next) {
+    console.log(addScs);
     if (addScs.length == 0) {
         res.send("Need addScs in initConfig .json!!!");
+        res.send("status:'error', msg:'子链地址未成功添加到配置中，请重试！'");
         return;
     }
 
@@ -176,6 +186,7 @@ function addScss(req, res, next) {
         } else {
             // Add balance
             logger.info("Add funding to SCS!");
+            res.send("status:'error', msg:'子链地址保证金不足！'");
             utils.sendtx(baseaddr, addScs[i], minScsDeposit);
             utils.waitBalance(addScs[i], minScsDeposit);
         }
@@ -198,6 +209,7 @@ function addScss(req, res, next) {
             break;
         }
         logger.info("Waiting registertopool, current scs count=" + count);
+        result.send("status:'error', msg:'等待中，当前子链数：'" + count + "!'");
         utils.sleep(5000);
     }
 
@@ -217,6 +229,7 @@ function closeMicroChain(req, res, next) {
     var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contract.json"), 'utf8'));
     utils.sendtx(baseaddr, config.data[2]['microChainAddr'], 0, '0x43d726d6');
     logger.info("waiting for a flush!!!");
+    res.send("{status:'success',msg:'关闭微链成功！'}")
 }
 
 function config(req, res, next) {
