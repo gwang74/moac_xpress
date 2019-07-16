@@ -89,6 +89,10 @@ function checkBalance(inaddr, inMcAmt) {
     }
 }
 
+function refreshInitConfig() {
+    nconf.file({ file: path.resolve(__dirname, "../../initConfig.json") });
+}
+
 function waitBalance(addr, target) {
     while (true) {
         let balance = chain3.mc.getBalance(addr) / 1000000000000000000;
@@ -192,8 +196,9 @@ function deployscspoolWithAddr() {
     bin = output.contracts[':' + contractName].bytecode;
 
     var subchainprotocolbaseContract = chain3.mc.contract(JSON.parse(abi));
-
-    var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../contract.json"), 'utf8'));
+    logger.info(path.resolve(__dirname, "../contract.json"))
+    var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contract.json"), 'utf8'));
+    logger.info(config.data[1]['scsPoolAddr']);
     scsPool = subchainprotocolbaseContract.at(config.data[1]['scsPoolAddr']);
     logger.info("scsPool created at address:", scsPool.address);
     return scsPool;
@@ -280,5 +285,6 @@ module.exports = {
     addMicroChainFund,
     vnoderegister,
     chain3,
-    nconf
+    nconf,
+    refreshInitConfig
 }

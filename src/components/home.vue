@@ -11,6 +11,31 @@
     </section>
     <section class="content">
       <el-tabs tab-position="top">
+        <el-tab-pane label="准备工作说明">
+          <div class="content-pane">
+            <div class="content-pane-left" style="text-align:left;width:800px">
+            <p><b>1.Vnode节点同步</b><br>
+            版本来源: <a style="text-decoration: none;color: #419efb;" href="https://github.com/MOACChain/moac-core/releases/">https://github.com/MOACChain/moac-core/releases/</a><br>
+            配置好vnodeconfig.json后，可在测试环境testnet启动节点：<br>
+            ./moac –testnet -rpcaddr ‘your ip’ -rpcport ‘8545’ –rpc –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”<br>
+            同步需要一段时间<br>  
+            具体可参照：<br>
+            <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81078424">墨客区块链(MOAC BlockChain) 节点安装教程</el-link><br>
+            <br>
+            <b>2.SCS节点启动，获取SCS帐号</b><br>
+            配置好userconfig.json后，可启动
+            ./scsserver –password “123456”<br>  
+            具体可参照：<br>
+            <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81125954">墨客区块链(MOAC BlockChain) 子链搭建教程</el-link><br>
+            </p>
+            <p style="margin-top: 40px;"><b>详情参考：</b><br>
+            <el-link type="primary" href="https://moacdocs-chn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html">
+            部署子链前的准备工作
+            </el-link>
+            </p>
+            </div>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="部署子链出块">
           <div class="content-pane">
             <div class="content-pane-left">
@@ -82,14 +107,15 @@
               <el-form
               :model="contractData"
               ref="contractData">
+                <span>完成部署后子链合约相关地址</span>
                 <el-form-item label="Vnode矿池合约地址">
-                  <el-input v-model="contractData[0].vnodePoolAddr" type="text" readonly="true"></el-input>
+                  <el-input v-model="contractData[0].vnodePoolAddr" type="text" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="子链矿池地址">
-                  <el-input v-model="contractData[1].scsPoolAddr" type="text" readonly="true"></el-input>
+                  <el-input v-model="contractData[1].scsPoolAddr" type="text" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="子链合约地址">
-                  <el-input v-model="contractData[2].microChainAddr" type="text" readonly="true"></el-input>
+                  <el-input v-model="contractData[2].microChainAddr" type="text" readonly></el-input>
                 </el-form-item>
               </el-form>
             </div>
@@ -117,6 +143,18 @@
                 </div>
               </div>
               <el-button type="primary" @click="addScsToConfig" class="button">一键添加</el-button>
+            </div>
+            <div class="infoboard">
+                <span>已完成添加的子链</span>
+                <li
+                    v-for="(item,index) of addedScs"
+                    :key="'new'+ index"
+                    style="list-style:none"
+                  >
+                    <div style="padding:10px;">
+                      <el-input v-model="addedScs[index]" readonly></el-input>
+                    </div>
+                  </li>
             </div>
           </div>
         </el-tab-pane>
@@ -218,8 +256,8 @@ export default {
         monitorAddr: "", // 用于监听的子链
         monitorLink: "" // 监听子链的rpc接口
       },
-      addNewScs: [],
-      addMonitorAddr: "",
+      addNewScs: [],//需要添加的子链
+      addedScs:[],//已完成添加的子链
       rules: {
         baseaddr: [{ required: true, message: "不可为空", trigger: "blur" }],
         basepsd: [{ required: true, message: "不可为空", trigger: "blur" }],
@@ -266,7 +304,7 @@ export default {
           microChainAddr: ""  // 子链合约地址
         }
       ],
-      deployButton:false
+      deployButton:false,
     };
   },
   created() {
@@ -312,6 +350,7 @@ export default {
               function(res) {
                 console.log(res);
                 if (res.status === 200) {
+                  this.$message({type: "info",message: "开始部署，请耐心等待！"});
                   this.$http.post(this.url + "/deploy").then(
                     function(res) {
                       console.log(res);
@@ -321,9 +360,6 @@ export default {
                           case "success":this.$message({type: "success",message: data.msg});
                             this.getContact();
                             this.deployButton = true;
-                            break;
-                          case "ok":this.$message({type: "info",message: data.msg});
-                            this.deployButton = true;  
                             break;
                           case "error":this.$message.error(data.msg); 
                             this.deployButton = false;
@@ -366,32 +402,27 @@ export default {
     cancelScs() {
       this.addNewScs.splice(-1);
     },
-    handleRes(res){
-      let data = JSON.parse(res.bodyText);
-      if(data){
-        switch(data.status){
-          case "success":this.$message({type: "success",message: data.msg}); 
-            break;
-          case "ok":this.$message({type: "info",message: data.msg}); 
-            break;
-          case "error":this.$message.error(data.msg); 
-            break;
-        }
-      }
-    },
     addScsToConfig() {
       this.addData();
       this.initConfig.addScs = this.addNewScs;
-      this.$http
-        .post(this.url + "/initConfig", this.initConfig, { emulateJSON: false })
-        .then(
+      this.$http.post(this.url + "/initConfig", this.initConfig, { emulateJSON: false }).then(
           function(res) {
             console.log(res);
             if (res.status === 200) {
               this.$http.post(this.url + "/addScs").then(
                 function(res) {
                   console.log(res);
-                  this.handleRes(res);
+                  let data = JSON.parse(res.bodyText);
+                  if(data){
+                    switch(data.status){
+                      case "success":this.$message({type: "success",message: data.msg}); 
+                        this.addedScs = this.addedScs.concat(this.addNewScs);
+                        this.addNewScs = [];
+                        break;
+                      case "error":this.$message.error(data.msg); 
+                        break;
+                    }
+                  }
                 },
                 function(res) {
                   console.log(res.status);
@@ -419,7 +450,15 @@ export default {
                   this.$http.post(this.url + "/addMonitor").then(
                     function(res) {
                       console.log(res);
-                      this.handleRes(res);
+                      let data = JSON.parse(res.bodyText);
+                      if(data){
+                        switch(data.status){
+                          case "success":this.$message({type: "success",message: data.msg}); 
+                            break;
+                          case "error":this.$message.error(data.msg); 
+                            break;
+                        }
+                      }
                     },
                     function(res) {
                       console.log(res.status);
@@ -479,6 +518,7 @@ export default {
   display: block;
   height: 100%;
   width: 100%;
+  min-width: 1250px;
 }
 .head_back {
   width: 100%;
@@ -506,7 +546,6 @@ export default {
 }
 .content {
   margin: 20px;
-  
 }
 .content-pane {
   margin: 20px;
@@ -517,8 +556,10 @@ export default {
   .infoboard {
     width: 500px;
     position: absolute;
-    top: 50px;
+    top: 20px;
     left: 700px;
+    padding: 10px;
+    background: #d4ebf6;
   }
 }
 .inputarea {
@@ -531,5 +572,15 @@ export default {
   width: 200px;
   float: left;
   margin: 10px;
+}
+.popoverButton {
+  border: none;
+  color: #ffffff;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 </style>
