@@ -52,7 +52,7 @@ vnodeUri和vnodeConnectUrl需要是可连接的节点地址，如果没有，可
 ./moac –testnet -rpcaddr ‘your ip’ -rpcport ‘8545’ –rpc –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”
 同步需要一段时间
 具体可参照：
-墨客区块链(MOAC BlockChain) [节点安装教程]（https://blog.csdn.net/lyq13573221675/article/details/81078424）
+墨客区块链(MOAC BlockChain) [节点安装教程](https://blog.csdn.net/lyq13573221675/article/details/81078424)
 
 ### 启动
 ```javascript
@@ -68,8 +68,7 @@ npm run start
 墨客区块链(MOAC BlockChain) [子链搭建教程](https://blog.csdn.net/lyq13573221675/article/details/81125954)
 
 
-[部署子链前的准备工作]
-(https://moacdocs-chn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html)
+[部署子链前的准备工作](https://moacdocschn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html)
 
 #### 子链相关合约地址contract.json
 上述命令执行后会生成该文件
