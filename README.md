@@ -10,7 +10,7 @@
 
 ---
 
-### 安装
+## 安装
 ```javascript
 npm install
 ```
@@ -42,37 +42,47 @@ npm install
 	"monitorLink": "127.0.0.1:8546" // 监听节点的rpc接口
 }
 ```
-vnodeUri和vnodeConnectUrl需要是可连接的节点地址，如果没有，可以按照启动前准备，自行配置vnode节点。
 
-### 启动前准备
+* vnodeUri需先填写可连接的节点地址，否则服务无法启动。如果没有，可以按照启动前准备，自行配置vnode节点。
+
+## 启动前准备
 ### Vnode节点同步
 版本来源: [https://github.com/MOACChain/moac-core/releases/](https://github.com/MOACChain/moac-core/releases/)
 
-配置好vnodeconfig.json后，可在测试环境testnet启动节点：
-./moac –testnet -rpcaddr ‘your ip’ -rpcport ‘8545’ –rpc –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”
-同步需要一段时间
-具体可参照：
-墨客区块链(MOAC BlockChain) [节点安装教程]（https://blog.csdn.net/lyq13573221675/article/details/81078424）
+需先配置vnodeconfig.json，配置后可在测试环境testnet启动节点：
 
-### 启动
+```javascript
+./moac -testnet -rpc -rpcaddr ‘your ip’ -rpcport 8545 –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”
+```
+
+成功启动后，同步需要一段时间。
+
+具体可参照：
+
+[墨客区块链(MOAC BlockChain) 节点安装教程](https://blog.csdn.net/lyq13573221675/article/details/81078424)
+
+### SCS节点启动，获取SCS帐号
+需先配置userconfig.json后，配置好后可启动子链
+
+```javascript
+./scsserver –password “123456” 
+```
+
+具体可参照：
+
+[墨客区块链(MOAC BlockChain)子链搭建教程](https://blog.csdn.net/lyq13573221675/article/details/81125954)
+
+
+[部署子链前的准备工作](https://moacdocs-chn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html)
+
+## 启动服务
 ```javascript
 npm run start
 ```
-启动后弹出用户界面
-
-### SCS节点启动，获取SCS帐号
-配置好userconfig.json后，可启动
-./scsserver –password “123456” 
-
-具体可参照：
-墨客区块链(MOAC BlockChain) [子链搭建教程](https://blog.csdn.net/lyq13573221675/article/details/81125954)
-
-
-[部署子链前的准备工作]
-(https://moacdocs-chn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html)
+成功启动后弹出用户操作界面，只需填写相应地址，点击按钮即可完成子链部署。
 
 #### 子链相关合约地址contract.json
-上述命令执行后会生成该文件
+部署成功后会生成该合约地址文件
 ```json
 {
 	"data": [
