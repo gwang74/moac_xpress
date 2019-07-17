@@ -29,27 +29,37 @@ var logger = require('./logger');
 
 //===============Setup the Parameters==========================================
 // need to have a valid account to use for contracts deployment
-const baseaddr = utils.nconf.get("baseaddr");
-const privatekey = utils.nconf.get("privatekey");
-const monitorAddr = utils.nconf.get("monitorAddr");
-const monitorLink = utils.nconf.get("monitorLink");
-const addScs = utils.nconf.get("addScs");
+var baseaddr = utils.nconf.get("baseaddr");
+var privatekey = utils.nconf.get("privatekey");
+var monitorAddr = utils.nconf.get("monitorAddr");
+var monitorLink = utils.nconf.get("monitorLink");
+var addScs = utils.nconf.get("addScs");
 
 // The VNODE benificial address, should be found in the vnodeconfig.json 
-const vnodeVia = utils.nconf.get("vnodeVia");
-const vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl"); //VNODE connection as parameter to use for VNODE protocols
-const minScsRequired = utils.nconf.get("minScsRequired"); // Min number of SCSs in the MicroChain, recommended 3 or more
-const rpcLink = utils.nconf.get("rpcLink");
+var vnodeVia = utils.nconf.get("vnodeVia");
+var vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl"); //VNODE connection as parameter to use for VNODE protocols
+var minScsRequired = utils.nconf.get("minScsRequired"); // Min number of SCSs in the MicroChain, recommended 3 or more
+var rpcLink = utils.nconf.get("rpcLink");
 
-const minVnodeDeposit = utils.nconf.get("minVnodeDeposit"); // number of deposit required for the VNODE proxy to register, unit is mc
-const minScsDeposit = utils.nconf.get("minScsDeposit"); // SCS must pay more than this in the register function to get into the SCS pool
-const microChainDeposit = utils.nconf.get("microChainDeposit"); // The deposit is required for each SCS to join the MicroChain
+var minVnodeDeposit = utils.nconf.get("minVnodeDeposit"); // number of deposit required for the VNODE proxy to register, unit is mc
+var minScsDeposit = utils.nconf.get("minScsDeposit"); // SCS must pay more than this in the register function to get into the SCS pool
+var microChainDeposit = utils.nconf.get("microChainDeposit"); // The deposit is required for each SCS to join the MicroChain
 
 //===============Check the Blockchain connection===============================
 
 function deploy(req, result, next) {
     // The known SCS on MOAC network
     // result.send('deploy start!!!');
+    utils.refreshInitConfig();
+    baseaddr = utils.nconf.get("baseaddr");
+    privatekey = utils.nconf.get("privatekey");
+    vnodeVia = utils.nconf.get("vnodeVia");
+    vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");
+    minScsRequired = utils.nconf.get("minScsRequired");
+    rpcLink = utils.nconf.get("rpcLink");
+    minVnodeDeposit = utils.nconf.get("minVnodeDeposit");
+    minScsDeposit = utils.nconf.get("minScsDeposit");
+    microChainDeposit = utils.nconf.get("microChainDeposit");
     var scs = utils.nconf.get("scs");
     if (scs.length == 0) {
         logger.info("Need scs in initConfig .json!!!");
@@ -159,6 +169,16 @@ function deploy(req, result, next) {
 }
 
 function addMonitor(req, res, next) {
+    utils.refreshInitConfig();
+    baseaddr = utils.nconf.get("baseaddr");
+    privatekey = utils.nconf.get("privatekey");
+    vnodeVia = utils.nconf.get("vnodeVia");
+    vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");
+    minScsRequired = utils.nconf.get("minScsRequired");
+    rpcLink = utils.nconf.get("rpcLink");
+    minVnodeDeposit = utils.nconf.get("minVnodeDeposit");
+    minScsDeposit = utils.nconf.get("minScsDeposit");
+    microChainDeposit = utils.nconf.get("microChainDeposit");
     var subchainbase = utils.deployMicroChainWithAddr();
     var data = subchainbase.registerAsMonitor.getData(monitorAddr, monitorLink);
     utils.sendtx(baseaddr, subchainbase.address, 1, data);
@@ -169,6 +189,17 @@ function addMonitor(req, res, next) {
 
 function addScss(req, res, next) {
     utils.refreshInitConfig();
+    addScs = utils.nconf.get("addScs");
+    baseaddr = utils.nconf.get("baseaddr");
+    privatekey = utils.nconf.get("privatekey");
+    vnodeVia = utils.nconf.get("vnodeVia");
+    vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");
+    minScsRequired = utils.nconf.get("minScsRequired");
+    rpcLink = utils.nconf.get("rpcLink");
+    minVnodeDeposit = utils.nconf.get("minVnodeDeposit");
+    minScsDeposit = utils.nconf.get("minScsDeposit");
+    microChainDeposit = utils.nconf.get("microChainDeposit");
+    console.log(addScs);
     if (addScs.length == 0) {
         logger.info("Need addScs in initConfig .json!!!");
         res.send('{"status":"error", "msg":"配置中无添加的子链地址！"}')

@@ -52,7 +52,7 @@ npm install
 需先配置vnodeconfig.json，配置后可在测试环境testnet启动节点：
 
 ```javascript
-./moac -testnet -rpc -rpcaddr ‘your ip’ -rpcport 8545 –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”
+./moac -testnet -rpc -rpcaddr ‘your ip’ -rpcport 8545 -rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”
 ```
 
 成功启动后，同步需要一段时间。

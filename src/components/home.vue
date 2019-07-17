@@ -17,13 +17,13 @@
             <p><b>1.Vnode节点同步</b><br>
             版本来源: <a style="text-decoration: none;color: #419efb;" href="https://github.com/MOACChain/moac-core/releases/">https://github.com/MOACChain/moac-core/releases/</a><br>
             配置好vnodeconfig.json后，可在测试环境testnet启动节点：<br>
-            ./moac –testnet -rpcaddr ‘your ip’ -rpcport ‘8545’ –rpc –rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”<br>
+            ./moac -testnet -rpcaddr ‘your ip’ -rpcport ‘8545’ -rpc -rpcapi “chain3,mc,net,db,personal,admin,miner,txpool”<br>
             同步需要一段时间<br>  
             具体可参照：<br>
             <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81078424">墨客区块链(MOAC BlockChain) 节点安装教程</el-link><br>
             <br>
             <b>2.SCS节点启动，获取SCS帐号</b><br>
-            配置好userconfig.json后，可启动
+            配置好userconfig.json后，可启动<br>
             ./scsserver –password “123456”<br>  
             具体可参照：<br>
             <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81125954">墨客区块链(MOAC BlockChain) 子链搭建教程</el-link><br>
@@ -47,10 +47,10 @@
                 :rules="rules"
               >
                 <el-form-item label="子链操作账号" prop="baseaddr">
-                  <el-input v-model="configData.baseaddr" type="text"></el-input>
+                  <el-input v-model="configData.baseaddr" type="text" placeholder="请输入子链操作账号"></el-input>
                 </el-form-item>
                 <el-form-item label="密钥" prop="privatekey">
-                  <el-input v-model="configData.privatekey" type="text"></el-input>
+                  <el-input v-model="configData.privatekey" type="text" placeholder="请输入密钥"></el-input>
                 </el-form-item>
                 <el-form-item label="SCS节点" prop="scs">
                   <li
@@ -62,17 +62,18 @@
                       v-model="configData.scs[index]"
                       type="text"
                       style="margin-bottom: 10px;"
+                      placeholder="请输入节点地址"
                     ></el-input>
                   </li>
                 </el-form-item>
                 <el-form-item label="主链vnode收益账号" prop="vnodeVia">
-                  <el-input v-model="configData.vnodeVia" type="text"></el-input>
+                  <el-input v-model="configData.vnodeVia" type="text" placeholder="请输入主链vnode收益账号"></el-input>
                 </el-form-item>
                 <el-form-item label="代理vnode节点" prop="vnodeUri">
-                  <el-input v-model="configData.vnodeUri" type="text"></el-input>
+                  <el-input v-model="configData.vnodeUri" type="text" placeholder="请输入代理vnode节点"></el-input>
                 </el-form-item>
                 <el-form-item label="子链调用地址" prop="vnodeConnectUrl">
-                  <el-input v-model="configData.vnodeConnectUrl" type="text"></el-input>
+                  <el-input v-model="configData.vnodeConnectUrl" type="text" placeholder="请输入子链调用地址"></el-input>
                 </el-form-item>
                 <el-form-item label="所需最小子链数" prop="minScsRequired">
                   <el-input
@@ -80,21 +81,22 @@
                     type="number"
                     maxlength="1"
                     @change="getScsNumber"
+                    placeholder="请输入最小子链数，当前允许值：1，3，5，7"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="代理vnode节点保证金" prop="minVnodeDeposit">
-                  <el-input v-model="configData.minVnodeDeposit" type="text"></el-input>
+                  <el-input v-model="configData.minVnodeDeposit" type="text" placeholder="请输入代理vnode节点保证金"></el-input>
                 </el-form-item>
                 <el-form-item label="子链矿池保证金" prop="minScsDeposit">
-                  <el-input v-model="configData.minScsDeposit" type="text"></el-input>
+                  <el-input v-model="configData.minScsDeposit" type="text" placeholder="请输入子链矿池保证金"></el-input>
                 </el-form-item>
                 <el-form-item label="子链合约gas费" prop="microChainDeposit">
-                  <el-input v-model="configData.microChainDeposit" type="text"></el-input>
+                  <el-input v-model="configData.microChainDeposit" type="text" placeholder="请输入子链合约gas费"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
                     type="primary"
-                    @click="deployStart"
+                    @click="deployAction"
                     class="button"
                     style="margin-left: -160px;"
                     :disabled="deployButton"
@@ -121,19 +123,19 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="添加新的子链">
+        <el-tab-pane label="添加新的Scs节点">
           <div class="content-pane">
             <div class="content-pane-left">
               <div id="list">
                 <div class="contentList">
-                  <div style="float:left;margin:10px;width: 100%;text-align: left;">添加的子链：</div>
+                  <div style="float:left;margin:10px;width: 100%;text-align: left;">添加的Scs节点：</div>
                   <li
                     v-for="(item,index) of  addNewScs"
                     :key="'new'+ index"
                     style="list-style:none"
                   >
                     <div style="padding:10px;">
-                      <el-input v-model="addNewScs[index]"></el-input>
+                      <el-input v-model="addNewScs[index]" placeholder="请输入Scs节点地址"></el-input>
                     </div>
                   </li>
                   <div style="float:left;width:100%">
@@ -142,10 +144,10 @@
                   </div>
                 </div>
               </div>
-              <el-button type="primary" @click="addScsToConfig" class="button">一键添加</el-button>
+              <el-button type="primary" @click="addScsToConfig" class="button" :disabled="deployButton">一键添加</el-button>
             </div>
             <div class="infoboard">
-                <span>已完成添加的子链</span>
+                <span>已完成添加的Scs节点</span>
                 <li
                     v-for="(item,index) of addedScs"
                     :key="'new'+ index"
@@ -158,7 +160,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="添加监听子链">
+        <el-tab-pane label="添加监听子链节点">
           <div class="content-pane">
             <div class="content-pane-left">
               <el-form
@@ -168,17 +170,18 @@
                 ref="monitor"
                 :rules="monitorRules">
                 <el-form-item label="监听子链账号" prop="monitorAddr">
-                  <el-input v-model="monitor.monitorAddr" type="text"></el-input>
+                  <el-input v-model="monitor.monitorAddr" type="text" placeholder="请输入监听子链账号"></el-input>
                 </el-form-item>
                 <el-form-item label="监听子链rpc接口" prop="monitorLink">
-                  <el-input v-model="monitor.monitorLink" type="text"></el-input>
+                  <el-input v-model="monitor.monitorLink" type="text" placeholder="请输入监听子链rpc接口"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
                     type="primary"
                     @click="addMonitorAddrtoConfig"
                     class="button"
-                    style="margin-left: -150px;">一键添加</el-button>
+                    style="margin-left: -150px;"
+                    :disabled="deployButton">一键添加</el-button>
                   <el-button @click="clearMoitor" class="button">重置</el-button>
                 </el-form-item>
               </el-form>
@@ -187,7 +190,7 @@
         </el-tab-pane>
         <el-tab-pane label="关闭子链">
           <div class="content-pane">
-            <el-button type="primary" @click="onClose" class="button">一键关闭</el-button>
+            <el-button type="primary" @click="onClose" class="button" :disabled="deployButton">一键关闭</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -196,7 +199,7 @@
 </template>
 
 <script>
-import { truncate } from 'fs';
+import { truncate, constants } from 'fs';
 export default {
   name: "home",
   data() {
@@ -260,7 +263,6 @@ export default {
       addedScs:[],//已完成添加的子链
       rules: {
         baseaddr: [{ required: true, message: "不可为空", trigger: "blur" }],
-        basepsd: [{ required: true, message: "不可为空", trigger: "blur" }],
         privatekey: [{ required: true, message: "不可为空", trigger: "blur" }],
         scs: [
           { required: true, message: "不可为空", trigger: "blur" },
@@ -309,6 +311,7 @@ export default {
   },
   created() {
     this.getInitConfig();
+    this.getContact();
   },
   methods: {
     getInitConfig() {
@@ -316,6 +319,7 @@ export default {
         function(res) {
           console.log(res.body);
           this.configData = res.body;
+          this.addedScs = res.body.addScs;
         },
         function() {
           console.log("请求失败处理");
@@ -342,59 +346,77 @@ export default {
         }
       }
     },
-    deployStart() {
+    deployAction() {
       this.$refs["configData"].validate( valid => {
         if (valid) {
-          this.addData();
-          this.$http.post(this.url + "/initConfig", this.initConfig, {emulateJSON: false}).then(
+          console.log(this.contractData)
+          if(this.contractData[0].vnodePoolAddr != "" &&
+          this.contractData[1].scsPoolAddr != "" &&
+          this.contractData[2].microChainAddr != ""){
+            this.$confirm('当前部署已完成，继续重新部署会覆盖当前已生成的相关合约地址, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+                this.deployStart();
+            }).catch(() => {         
+            });
+          }else{
+            this.deployStart();
+          }
+        }
+      });
+    },
+    deployStart() {
+      this.addData();
+      this.$http.post(this.url + "/initConfig", this.initConfig, {emulateJSON: false}).then(
+        function(res) {
+          console.log(res);
+          if (res.status === 200) {
+            this.$message({type: "info",message: "开始部署，请耐心等待！"});
+            this.deployButton = true;
+            this.$http.post(this.url + "/deploy").then(
               function(res) {
                 console.log(res);
-                if (res.status === 200) {
-                  this.$message({type: "info",message: "开始部署，请耐心等待！"});
-                  this.$http.post(this.url + "/deploy").then(
-                    function(res) {
-                      console.log(res);
-                      var data = JSON.parse(res.bodyText);
-                      if(data){
-                        switch(data.status){
-                          case "success":this.$message({type: "success",message: data.msg});
-                            this.getContact();
-                            this.deployButton = true;
-                            break;
-                          case "error":this.$message.error(data.msg); 
-                            this.deployButton = false;
-                            break;
-                        }
-                      }
-                    },
-                    function(res) {
-                      console.log(res.status);
-                      this.$message.error("部署失败");
+                var data = JSON.parse(res.bodyText);
+                if(data){
+                  switch(data.status){
+                    case "success":this.$message({type: "success",message: data.msg});
+                      this.getContact();
                       this.deployButton = false;
-                    }
-                  );
+                      break;
+                    case "error":this.$message.error(data.msg); 
+                      this.deployButton = false;
+                      break;
+                  }
                 }
               },
               function(res) {
                 console.log(res.status);
-                this.$message.error("初始化配置失败！");
-                return false;
+                this.$message.error("部署失败");
+                this.deployButton = false;
               }
             );
+          }
+        },
+        function(res) {
+          console.log(res.status);
+          this.$message.error("初始化配置失败！");
+          return false;
         }
-      });
+      );
     },
     addData(){
         this.initConfig.baseaddr = this.configData.baseaddr;
-          this.initConfig.privatekey = this.configData.privatekey;
-          this.initConfig.scs = this.configData.scs;
-          this.initConfig.vnodeVia = this.configData.vnodeVia;
-          this.initConfig.vnodeUri = this.configData.vnodeUri;
-          this.initConfig.vnodeConnectUrl = this.configData.vnodeConnectUrl;
-          this.initConfig.minScsRequired = this.configData.minScsRequired;
-          this.initConfig.minVnodeDeposit = this.configData.minVnodeDeposit;
-          this.initConfig.minScsDeposit = this.configData.minScsDeposit;
-          this.initConfig.minScsDeposit = this.configData.minScsDeposit;
+        this.initConfig.privatekey = this.configData.privatekey;
+        this.initConfig.scs = this.configData.scs;
+        this.initConfig.vnodeVia = this.configData.vnodeVia;
+        this.initConfig.vnodeUri = this.configData.vnodeUri;
+        this.initConfig.vnodeConnectUrl = this.configData.vnodeConnectUrl;
+        this.initConfig.minScsRequired = this.configData.minScsRequired;
+        this.initConfig.minVnodeDeposit = this.configData.minVnodeDeposit;
+        this.initConfig.minScsDeposit = this.configData.minScsDeposit;
+        this.initConfig.minScsDeposit = this.configData.minScsDeposit;
     },
     addScs() {
       this.addNewScs.push("");
@@ -409,6 +431,8 @@ export default {
           function(res) {
             console.log(res);
             if (res.status === 200) {
+              this.$message({type: "info",message: "开始添加，请稍等！"});
+              this.deployButton = true;
               this.$http.post(this.url + "/addScs").then(
                 function(res) {
                   console.log(res);
@@ -418,8 +442,10 @@ export default {
                       case "success":this.$message({type: "success",message: data.msg}); 
                         this.addedScs = this.addedScs.concat(this.addNewScs);
                         this.addNewScs = [];
+                        this.deployButton = false;
                         break;
-                      case "error":this.$message.error(data.msg); 
+                      case "error":this.$message.error(data.msg);
+                        this.deployButton = false; 
                         break;
                     }
                   }
@@ -447,6 +473,8 @@ export default {
               function(res) {
                 console.log(res);
                 if (res.status === 200) {
+                  this.$message({type: "info",message: "开始添加，请稍等！"});
+                  this.deployButton = true;
                   this.$http.post(this.url + "/addMonitor").then(
                     function(res) {
                       console.log(res);
@@ -454,8 +482,10 @@ export default {
                       if(data){
                         switch(data.status){
                           case "success":this.$message({type: "success",message: data.msg}); 
+                            this.deployButton = false;
                             break;
                           case "error":this.$message.error(data.msg); 
+                            this.deployButton = false;
                             break;
                         }
                       }
@@ -479,7 +509,9 @@ export default {
       this.$http.get(this.url + "/getContract").then(
         function(res) {
           console.log(res.body);
-          this.contractData = res.body.data;
+          if(res.body.data.length === 3){
+            this.contractData = res.body.data;
+          }
         },
         function() {
           console.log("请求失败处理");
@@ -487,6 +519,8 @@ export default {
       );
     },
     onClose() {
+      this.$message({type: "info",message: "关闭中，请稍等！"});
+      this.deployButton = true;
       this.$http.post(this.url + "/closeMicroChain", this.initConfig, {emulateJSON: true}).then(
           function(res) {
             console.log(res);
@@ -494,7 +528,8 @@ export default {
               this.$message({
                 type:"success",
                 message:"关闭成功"
-              })
+              });
+              this.deployButton = false;
             }
           },
           function(res) {
