@@ -38,7 +38,15 @@
         </el-tab-pane>
         <el-tab-pane label="部署子链出块">
           <div class="content-pane">
-            <div class="content-pane-left">
+            <div class="content-pane-left" style="margin-top: 20px;">
+              <el-alert
+                class="deployInfo"
+                title="正在部署中，请耐心等待..."
+                center
+                :closable="false"
+                type="info"
+                v-show="isshow">
+              </el-alert>
               <el-form
                 label-position="left"
                 label-width="160px"
@@ -51,6 +59,15 @@
                 </el-form-item>
                 <el-form-item label="密钥" prop="privatekey">
                   <el-input v-model="configData.privatekey" type="text" placeholder="请输入密钥"></el-input>
+                </el-form-item>
+                <el-form-item label="所需最小子链数" prop="minScsRequired">
+                  <el-input
+                    v-model="configData.minScsRequired"
+                    type="number"
+                    maxlength="1"
+                    @change="getScsNumber"
+                    placeholder="请输入最小子链数，当前允许值：1，3，5，7"
+                  ></el-input>
                 </el-form-item>
                 <el-form-item label="SCS节点" prop="scs">
                   <li
@@ -74,15 +91,6 @@
                 </el-form-item>
                 <el-form-item label="子链调用地址" prop="vnodeConnectUrl">
                   <el-input v-model="configData.vnodeConnectUrl" type="text" placeholder="请输入子链调用地址"></el-input>
-                </el-form-item>
-                <el-form-item label="所需最小子链数" prop="minScsRequired">
-                  <el-input
-                    v-model="configData.minScsRequired"
-                    type="number"
-                    maxlength="1"
-                    @change="getScsNumber"
-                    placeholder="请输入最小子链数，当前允许值：1，3，5，7"
-                  ></el-input>
                 </el-form-item>
                 <el-form-item label="代理vnode节点保证金" prop="minVnodeDeposit">
                   <el-input v-model="configData.minVnodeDeposit" type="text" placeholder="请输入代理vnode节点保证金"></el-input>
@@ -307,6 +315,7 @@ export default {
         }
       ],
       deployButton:false,
+      isshow:false
     };
   },
   created() {
@@ -374,6 +383,7 @@ export default {
           console.log(res);
           if (res.status === 200) {
             this.$message({type: "info",message: "开始部署，请耐心等待！"});
+            this.isshow = true;
             this.deployButton = true;
             this.$http.post(this.url + "/deploy").then(
               function(res) {
@@ -383,9 +393,11 @@ export default {
                   switch(data.status){
                     case "success":this.$message({type: "success",message: data.msg});
                       this.getContact();
+                      this.isshow = false;
                       this.deployButton = false;
                       break;
                     case "error":this.$message.error(data.msg); 
+                      this.isshow = false;
                       this.deployButton = false;
                       break;
                   }
@@ -453,6 +465,7 @@ export default {
                 function(res) {
                   console.log(res.status);
                   this.$message.error("添加子链失败");
+                  this.deployButton = false;
                 }
               );
             }
@@ -493,6 +506,7 @@ export default {
                     function(res) {
                       console.log(res.status);
                       this.$message.error("添加监听子链失败");
+                      this.deployButton = false;
                     }
                   );
                 }
@@ -511,6 +525,12 @@ export default {
           console.log(res.body);
           if(res.body.data.length === 3){
             this.contractData = res.body.data;
+          }else {
+            this.contractData = [
+              {vnodePoolAddr: ""},
+              {scsPoolAddr: ""},
+              {microChainAddr: ""}
+            ];
           }
         },
         function() {
@@ -530,11 +550,13 @@ export default {
                 message:"关闭成功"
               });
               this.deployButton = false;
+              this.getContact();
             }
           },
           function(res) {
             console.log(res.status);
             this.$message.error("关闭操作未成功");
+            this.deployButton = false;
           }
         );
     },
@@ -587,11 +609,18 @@ export default {
   .content-pane-left {
     width: 600px;
     float: left;
+    .deployInfo {
+      position: absolute;
+      top: 0px;
+      height: 30px;
+      color: #195888;
+      background: #d4ebf6;
+    }
   }
   .infoboard {
     width: 500px;
     position: absolute;
-    top: 20px;
+    top: 40px;
     left: 700px;
     padding: 10px;
     background: #d4ebf6;
@@ -618,4 +647,5 @@ export default {
   font-size: 20px;
   cursor: pointer;
 }
+
 </style>

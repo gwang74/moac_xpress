@@ -254,6 +254,9 @@ function addScss(req, res, next) {
 function closeMicroChain(req, res, next) {
     var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contract.json"), 'utf8'));
     utils.sendtx(baseaddr, config.data[2]['microChainAddr'], 0, '0x43d726d6');
+    // clear config.json
+    var contract = { "data": [] };
+    fs.writeFileSync(path.resolve(__dirname, "../../contract.json"), JSON.stringify(contract, null, '\t'), 'utf8');
     logger.info("waiting for a flush!!!");
     res.send('{"status":"success","msg":"关闭微链成功！"}')
 }
@@ -387,7 +390,7 @@ function deployscspool() {
     wirteJson({ "scsPoolAddr": scsPoolAddr });
 
     subchainprotocolbase = subchainprotocolbaseContract.at(scsPoolAddr);
-    logger.info("subchainprotocolbase contract address:", subchainprotocolbaseContract.address);
+    logger.info("subchainprotocolbase contract address:", subchainprotocolbase.address);
     logger.info("Please use the mined contract addresses in deploying the MicroChain contract!!!")
 
     return subchainprotocolbase;
