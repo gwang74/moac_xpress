@@ -1,5 +1,13 @@
 <template>
   <div class="home">
+    <el-alert
+      class="deployInfo"
+      :title="alertMsg"
+      center
+      :closable="false"
+      :type="alertType"
+      v-show="isshow">
+    </el-alert>
     <section class="head_back"></section>
     <section class="head">
       <div class="topImgBox">
@@ -39,21 +47,12 @@
         <el-tab-pane label="部署子链出块">
           <div class="content-pane">
             <div class="content-pane-left" style="margin-top: 20px;">
-              <el-alert
-                class="deployInfo"
-                title="正在部署中，请耐心等待..."
-                center
-                :closable="false"
-                type="info"
-                v-show="isshow">
-              </el-alert>
               <el-form
                 label-position="left"
                 label-width="160px"
                 :model="configData"
                 ref="configData"
-                :rules="rules"
-              >
+                :rules="rules">
                 <el-form-item label="子链操作账号" prop="baseaddr">
                   <el-input v-model="configData.baseaddr" type="text" placeholder="请输入子链操作账号"></el-input>
                 </el-form-item>
@@ -170,7 +169,7 @@
         </el-tab-pane>
         <el-tab-pane label="添加监听子链节点">
           <div class="content-pane">
-            <div class="content-pane-left">
+            <div class="content-pane-left"  style="margin-top: 20px;">
               <el-form
                 label-position="left"
                 label-width="150px"
@@ -208,6 +207,7 @@
 
 <script>
 import { truncate, constants } from 'fs';
+import { setTimeout } from 'timers';
 export default {
   name: "home",
   data() {
@@ -237,7 +237,7 @@ export default {
       initConfig: {
         baseaddr: "", // 子链操作账号：进行创建合约，发起交易等基本操作
         privatekey: "", //密钥
-        scs: ["", "", ""], // scs节点
+        scs: [], // scs节点
         vnodeVia: "", // 主链vnode收益账号
         vnodeUri: "", // 代理Vnode节点
         vnodeConnectUrl: "", // vnode提供给子链的调用地址
@@ -315,7 +315,9 @@ export default {
         }
       ],
       deployButton:false,
-      isshow:false
+      isshow:false,
+      alertMsg:"开始部署，此过程需要一段时间，请耐心等待...",
+      alertType:"info"
     };
   },
   created() {
@@ -328,6 +330,9 @@ export default {
         function(res) {
           console.log(res.body);
           this.configData = res.body;
+          if(this.configData.scs.length === 0){
+            this.configData.scs = [""];
+          }
           this.addedScs = res.body.addScs;
         },
         function() {
@@ -338,7 +343,6 @@ export default {
     getScsNumber() {
       var length = this.configData.scs.length;
       var number = Number(this.configData.minScsRequired);
-      //console.log(length,number);
       if (number > 0) {
         while (
           this.configData.scs.length !== Number(this.configData.minScsRequired)
@@ -382,8 +386,8 @@ export default {
         function(res) {
           console.log(res);
           if (res.status === 200) {
-            this.$message({type: "info",message: "开始部署，请耐心等待！"});
-            this.isshow = true;
+            //this.$message({type: "info",message: "开始部署，请耐心等待！"});
+            this.setAlert(true, "info", "开始部署，此过程需要一段时间，请耐心等待...");
             this.deployButton = true;
             this.$http.post(this.url + "/deploy").then(
               function(res) {
@@ -391,13 +395,13 @@ export default {
                 var data = JSON.parse(res.bodyText);
                 if(data){
                   switch(data.status){
-                    case "success":this.$message({type: "success",message: data.msg});
+                    case "success":
+                      this.setAlert(true,"success", data.msg);
                       this.getContact();
-                      this.isshow = false;
                       this.deployButton = false;
                       break;
-                    case "error":this.$message.error(data.msg); 
-                      this.isshow = false;
+                    case "error":
+                      this.setAlert(true,"error", data.msg);
                       this.deployButton = false;
                       break;
                   }
@@ -405,7 +409,7 @@ export default {
               },
               function(res) {
                 console.log(res.status);
-                this.$message.error("部署失败");
+                this.setAlert(true,"error", "部署失败！");
                 this.deployButton = false;
               }
             );
@@ -413,7 +417,7 @@ export default {
         },
         function(res) {
           console.log(res.status);
-          this.$message.error("初始化配置失败！");
+          this.setAlert(true,"error", "初始化配置失败！");
           return false;
         }
       );
@@ -436,6 +440,16 @@ export default {
     cancelScs() {
       this.addNewScs.splice(-1);
     },
+    setAlert(show, type, msg){
+      this.isshow = show;
+      this.alertType = type;
+      this.alertMsg = msg;
+      if(type != "info"){
+        setTimeout(() => {
+          this.isshow = false;
+        },5000)
+      }
+    },
     addScsToConfig() {
       this.addData();
       this.initConfig.addScs = this.addNewScs;
@@ -443,7 +457,7 @@ export default {
           function(res) {
             console.log(res);
             if (res.status === 200) {
-              this.$message({type: "info",message: "开始添加，请稍等！"});
+              this.setAlert(true,"info", "开始添加子链，请稍等!");
               this.deployButton = true;
               this.$http.post(this.url + "/addScs").then(
                 function(res) {
@@ -451,12 +465,14 @@ export default {
                   let data = JSON.parse(res.bodyText);
                   if(data){
                     switch(data.status){
-                      case "success":this.$message({type: "success",message: data.msg}); 
+                      case "success":
+                        this.setAlert(true,"success", data.msg);
                         this.addedScs = this.addedScs.concat(this.addNewScs);
                         this.addNewScs = [];
                         this.deployButton = false;
                         break;
-                      case "error":this.$message.error(data.msg);
+                      case "error":
+                        this.setAlert(true,"error", data.msg);
                         this.deployButton = false; 
                         break;
                     }
@@ -464,7 +480,7 @@ export default {
                 },
                 function(res) {
                   console.log(res.status);
-                  this.$message.error("添加子链失败");
+                  this.setAlert(true,"error", "添加子链失败!");
                   this.deployButton = false;
                 }
               );
@@ -472,7 +488,7 @@ export default {
           },
           function(res) {
             console.log(res.status);
-            this.$message.error("初始化配置失败！");
+            this.setAlert(true,"error", "初始化配置失败！");
           }
         );
     },
@@ -486,7 +502,7 @@ export default {
               function(res) {
                 console.log(res);
                 if (res.status === 200) {
-                  this.$message({type: "info",message: "开始添加，请稍等！"});
+                  this.setAlert(true,"info", "开始添加监听子链，请稍等！");
                   this.deployButton = true;
                   this.$http.post(this.url + "/addMonitor").then(
                     function(res) {
@@ -494,10 +510,12 @@ export default {
                       let data = JSON.parse(res.bodyText);
                       if(data){
                         switch(data.status){
-                          case "success":this.$message({type: "success",message: data.msg}); 
+                          case "success":
+                            this.setAlert(true,"success", data.msg);
                             this.deployButton = false;
                             break;
-                          case "error":this.$message.error(data.msg); 
+                          case "error":
+                            this.setAlert(true,"error", data.msg); 
                             this.deployButton = false;
                             break;
                         }
@@ -505,7 +523,7 @@ export default {
                     },
                     function(res) {
                       console.log(res.status);
-                      this.$message.error("添加监听子链失败");
+                      this.setAlert(true,"error", "添加监听子链失败!");
                       this.deployButton = false;
                     }
                   );
@@ -513,7 +531,7 @@ export default {
               },
               function(res) {
                 console.log(res.status);
-                this.$message.error("初始化配置失败！");
+                this.setAlert(true,"error", "初始化配置失败!");
               }
             );
         }
@@ -535,27 +553,25 @@ export default {
         },
         function() {
           console.log("请求失败处理");
+          this.setAlert(true,"error", "获取子链相关合约地址失败!");
         }
       );
     },
     onClose() {
-      this.$message({type: "info",message: "关闭中，请稍等！"});
+      this.setAlert(true,"info", "正在关闭子链，请稍等...");
       this.deployButton = true;
       this.$http.post(this.url + "/closeMicroChain", this.initConfig, {emulateJSON: true}).then(
           function(res) {
             console.log(res);
             if (res.status === 200) {
-              this.$message({
-                type:"success",
-                message:"关闭成功"
-              });
+              this.setAlert(true,"success", "关闭成功!");
               this.deployButton = false;
               this.getContact();
             }
           },
           function(res) {
             console.log(res.status);
-            this.$message.error("关闭操作未成功");
+            this.setAlert(true,"error", "关闭子链失败!");
             this.deployButton = false;
           }
         );
@@ -604,18 +620,23 @@ export default {
 .content {
   margin: 20px;
 }
+.deployInfo {
+  position: absolute;
+  top: 230px;
+  width: 800px;
+  right: 0px;
+  left: 0px;
+  height: 30px;
+  margin: 0px auto;
+  text-align: center;
+  font-weight: bold;
+}
 .content-pane {
   margin: 20px;
   .content-pane-left {
     width: 600px;
     float: left;
-    .deployInfo {
-      position: absolute;
-      top: 0px;
-      height: 30px;
-      color: #195888;
-      background: #d4ebf6;
-    }
+    
   }
   .infoboard {
     width: 500px;

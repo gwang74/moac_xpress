@@ -2,14 +2,12 @@
 	"baseaddr": "0x7a2dc129b3d794e4e8a009c83ffd7a2412f5e326",
 	"privatekey": "86736091a441dffeb8656e731474433aaf531c4adab0497fa38d36215f44f18d",
 	"scs": [
-		"0xD83300863421a2278c90bf0B43B0673F87276C60",
-		"0x65Cf2DE3d759Df619db6b24d131B6f4549333eeb",
-		"0x7cA5be0f935B7B611939eDdcb5D91d140084eE24"
+		"0x850a1a715cbd8d54c4B9B6A27CD75C687FF93e23"
 	],
 	"vnodeVia": "0x5e2e03d1fb8aed9dbbd939fcc1a9f2aa9afdfde4",
 	"vnodeUri": "http://192.168.1.105:8545",
 	"vnodeConnectUrl": "192.168.1.105:80062",
-	"minScsRequired": "3",
+	"minScsRequired": "1",
 	"rpcLink": "",
 	"minVnodeDeposit": 1,
 	"minScsDeposit": 1,
