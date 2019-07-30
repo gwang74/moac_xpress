@@ -170,36 +170,29 @@ function deploy(req, result, next) {
 
 function addMonitor(req, res, next) {
     utils.refreshInitConfig();
+    monitorAddr = utils.nconf.get("monitorAddr");
+    monitorLink = utils.nconf.get("monitorLink");
     baseaddr = utils.nconf.get("baseaddr");
-    privatekey = utils.nconf.get("privatekey");
-    vnodeVia = utils.nconf.get("vnodeVia");
-    vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");
-    minScsRequired = utils.nconf.get("minScsRequired");
-    rpcLink = utils.nconf.get("rpcLink");
-    minVnodeDeposit = utils.nconf.get("minVnodeDeposit");
-    minScsDeposit = utils.nconf.get("minScsDeposit");
-    microChainDeposit = utils.nconf.get("microChainDeposit");
     var subchainbase = utils.deployMicroChainWithAddr();
     var data = subchainbase.registerAsMonitor.getData(monitorAddr, monitorLink);
-    utils.sendtx(baseaddr, subchainbase.address, 1, data);
-    logger.info(subchainbase.getMonitorInfo.call());
-    logger.info("add a monitor scs successfully!!!");
-    res.send('{"status":"success", "msg":"添加监听子链完成！"}');
+    var boo = utils.sendtx(baseaddr, subchainbase.address, 1, data);
+    console.log("boo:" + boo)
+    if (boo === false) {
+        logger.info("add a monitor scs failed!!!");
+        res.send('{"status":"error", "msg":"添加监听子链失败！"}');
+    } else {
+        logger.info(subchainbase.getMonitorInfo.call());
+        logger.info("add a monitor scs successfully!!!");
+        res.send('{"status":"success", "msg":"添加监听子链完成！"}');
+    }
+
 }
 
 function addScss(req, res, next) {
     utils.refreshInitConfig();
     addScs = utils.nconf.get("addScs");
     baseaddr = utils.nconf.get("baseaddr");
-    privatekey = utils.nconf.get("privatekey");
-    vnodeVia = utils.nconf.get("vnodeVia");
-    vnodeConnectUrl = utils.nconf.get("vnodeConnectUrl");
-    minScsRequired = utils.nconf.get("minScsRequired");
-    rpcLink = utils.nconf.get("rpcLink");
-    minVnodeDeposit = utils.nconf.get("minVnodeDeposit");
     minScsDeposit = utils.nconf.get("minScsDeposit");
-    microChainDeposit = utils.nconf.get("microChainDeposit");
-    console.log(addScs);
     if (addScs.length == 0) {
         logger.info("Need addScs in initConfig .json!!!");
         res.send('{"status":"error", "msg":"配置中无添加的子链地址！"}')
@@ -253,6 +246,7 @@ function addScss(req, res, next) {
 
 function closeMicroChain(req, res, next) {
     var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contract.json"), 'utf8'));
+    baseaddr = utils.nconf.get("baseaddr");
     utils.sendtx(baseaddr, config.data[2]['microChainAddr'], 0, '0x43d726d6');
     // clear config.json
     var contract = { "data": [] };

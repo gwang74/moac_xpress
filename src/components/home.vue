@@ -155,15 +155,17 @@
             </div>
             <div class="infoboard">
                 <span>已完成添加的Scs节点</span>
-                <li
-                    v-for="(item,index) of addedScs"
-                    :key="'new'+ index"
-                    style="list-style:none"
-                  >
-                    <div style="padding:10px;">
-                      <el-input v-model="addedScs[index]" readonly></el-input>
-                    </div>
-                  </li>
+                <div class="infoboard-list">
+                  <li
+                      v-for="(item,index) of addedScs"
+                      :key="'new'+ index"
+                      style="list-style:none"
+                    >
+                      <div style="padding:10px;">
+                        <el-input v-model="addedScs[index]" readonly></el-input>
+                      </div>
+                    </li>
+                </div>  
             </div>
           </div>
         </el-tab-pane>
@@ -261,7 +263,10 @@ export default {
         rpcLink: "",
         minVnodeDeposit: "", // 代理Vnode节点的保证金
         minScsDeposit: "", // 子链矿池的保证金
-        microChainDeposit: "" // 子链合约的gas费
+        microChainDeposit: "", // 子链合约的gas费
+        addScs: [], // 需要添加的子链节点
+        monitorAddr: "", // 用于监听的子链
+        monitorLink: "" // 监听子链的rpc接口
       },
       monitor: {
         monitorAddr: "", // 用于监听的子链
@@ -334,6 +339,8 @@ export default {
             this.configData.scs = [""];
           }
           this.addedScs = res.body.addScs;
+          this.monitor.monitorAddr = res.body.monitorAddr;
+          this.monitor.monitorLink = res.body.monitorLink;
         },
         function() {
           console.log("请求失败处理");
@@ -444,11 +451,6 @@ export default {
       this.isshow = show;
       this.alertType = type;
       this.alertMsg = msg;
-      if(type != "info"){
-        setTimeout(() => {
-          this.isshow = false;
-        },5000)
-      }
     },
     addScsToConfig() {
       this.addData();
@@ -636,7 +638,7 @@ export default {
   .content-pane-left {
     width: 600px;
     float: left;
-    
+    min-height:500px;
   }
   .infoboard {
     width: 500px;
@@ -645,6 +647,11 @@ export default {
     left: 700px;
     padding: 10px;
     background: #d4ebf6;
+    height: 350px;
+    .infoboard-list {
+      overflow:auto;
+      height: 320px;
+    }
   }
 }
 .inputarea {

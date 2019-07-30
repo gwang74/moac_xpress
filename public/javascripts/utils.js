@@ -52,7 +52,7 @@ function sendtx(src, tgtaddr, amount, strData) {
     let signtx = chain3.signTransaction(rawTx, privatekey);
     var transHash = chain3.mc.sendRawTransaction(signtx);
     logger.info('sending from:' + src + ' to:' + tgtaddr + ' amount:' + amount + ' with data:' + strData);
-    waitBlockForTransaction(transHash);
+    return waitBlockForTransaction(transHash);
 }
 
 function getNonce(src) {
@@ -156,7 +156,7 @@ function waitBlockForTransaction(transactionHash) {
             break;
         } else if (receipt && chain3.fromDecimal(receipt.status) == 0) {
             logger.info("transaction failed!");
-            break;
+            return false;
         }
         logger.info("block " + chain3.mc.blockNumber + "...");
         sleep(50000);
