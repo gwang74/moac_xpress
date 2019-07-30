@@ -57,7 +57,7 @@
                   <el-input v-model="configData.baseaddr" type="text" placeholder="请输入子链操作账号"></el-input>
                 </el-form-item>
                 <el-form-item label="密钥" prop="privatekey">
-                  <el-input v-model="configData.privatekey" type="text" placeholder="请输入密钥"></el-input>
+                  <el-input v-model="configData.privatekey" type="password" placeholder="请输入密钥"></el-input>
                 </el-form-item>
                 <el-form-item label="所需最小子链数" prop="minScsRequired">
                   <el-input
