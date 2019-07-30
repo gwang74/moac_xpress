@@ -176,7 +176,6 @@ function addMonitor(req, res, next) {
     var subchainbase = utils.deployMicroChainWithAddr();
     var data = subchainbase.registerAsMonitor.getData(monitorAddr, monitorLink);
     var boo = utils.sendtx(baseaddr, subchainbase.address, 1, data);
-    console.log("boo:" + boo)
     if (boo === false) {
         logger.info("add a monitor scs failed!!!");
         res.send('{"status":"error", "msg":"添加监听子链失败！"}');
