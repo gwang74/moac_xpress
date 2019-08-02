@@ -47,7 +47,7 @@ var microChainDeposit = utils.nconf.get("microChainDeposit"); // The deposit is 
 
 //===============Check the Blockchain connection===============================
 
-function deploy(req, result, next) {
+async function deploy(req, result, next) {
     // The known SCS on MOAC network
     // result.send('deploy start!!!');
     utils.refreshInitConfig();
@@ -95,7 +95,7 @@ function deploy(req, result, next) {
     scsPool = deployscspool();
 
     //===============Step 2. Use the deployed Contracts to start a MicroChain======
-    microChain = deployMicroChain();
+    microChain = await deployMicroChain();
 
     //===============Step 3. Use the deployed Contracts to start a MicroChain======
     if (utils.checkBalance(microChain.address, microChainDeposit)) {
@@ -109,7 +109,7 @@ function deploy(req, result, next) {
 
     if (utils.checkBalance(vnodeVia, minVnodeDeposit)) {
         logger.info("VNODE has enough balance continue...")
-            // sendtx(baseaddr,vnodecontractaddr,num,data)
+        // sendtx(baseaddr,vnodecontractaddr,num,data)
     } else {
         // Add balance
         logger.info("Add funding to VNODE!");
@@ -251,7 +251,7 @@ function closeMicroChain(req, res, next) {
     var contract = { "data": [] };
     fs.writeFileSync(path.resolve(__dirname, "../../contract.json"), JSON.stringify(contract, null, '\t'), 'utf8');
     logger.info("waiting for a flush!!!");
-    res.send('{"status":"success","msg":"关闭微链成功！"}')
+    res.send('{"status":"success","msg":"关闭子链成功！"}')
 }
 
 function config(req, res, next) {
@@ -390,7 +390,7 @@ function deployscspool() {
 }
 
 // Deploy the MicroChain contract to form a MicroChain with Atomic Swap of Token (ASM) function
-function deployMicroChain() {
+async function deployMicroChain() {
 
     var min = minScsRequired; //Min SCSs required in the MicroChain, only 1,3,5,7 should be used`
     var max = 11; //Max SCSs needed in the MicroChain, Only 11, 21, 31, 51, 99
@@ -447,9 +447,32 @@ function deployMicroChain() {
     };
 
     let signtx = utils.chain3.signTransaction(rawTx, privatekey);
-    var transHash = utils.chain3.mc.sendRawTransaction(signtx);
+    // var transHash = utils.chain3.mc.sendRawTransaction(signtx); //windows下ENAMETOOLONG err
+    var microChainAddr = await new Promise((resolve, reject) => {
+        utils.chain3.mc.sendRawTransaction(signtx, (e, transactionHash) => {
+            if (!e) {
+                let count = 0;
+                while (true) {
+                    var tr = utils.chain3.mc.getTransactionReceipt(transactionHash);
+                    if (tr) {
+                        if (tr.status) {
+                            console.log("Tx: " + transactionHash + " done! ");
+                        }
+                        else {
+                            console.log("Tx: " + transactionHash + " done but failed! ");
+                        }
+                        resolve(tr.contractAddress);
+                        break;
+                    }
 
-    var microChainAddr = utils.waitBlockForContract(transHash);
+                }
+            } else {
+                reject(e);
+            }
+        });
+    });
+
+    // var microChainAddr = utils.waitBlockForContract(transHash);
     wirteJson({ "microChainAddr": microChainAddr });
     subchainbase = subchainbaseContract.at(microChainAddr);
     logger.info("microChain created at address:", subchainbase.address);
