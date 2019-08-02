@@ -451,21 +451,8 @@ async function deployMicroChain() {
     var microChainAddr = await new Promise((resolve, reject) => {
         utils.chain3.mc.sendRawTransaction(signtx, (e, transactionHash) => {
             if (!e) {
-                let count = 0;
-                while (true) {
-                    var tr = utils.chain3.mc.getTransactionReceipt(transactionHash);
-                    if (tr) {
-                        if (tr.status) {
-                            console.log("Tx: " + transactionHash + " done! ");
-                        }
-                        else {
-                            console.log("Tx: " + transactionHash + " done but failed! ");
-                        }
-                        resolve(tr.contractAddress);
-                        break;
-                    }
-
-                }
+                var microChainAddr = utils.waitBlockForContract(transactionHash);
+                resolve(microChainAddr);
             } else {
                 reject(e);
             }
