@@ -20,7 +20,6 @@
  * 
 */
 
-// const chain3 = require('utils.chain3');
 var fs = require('fs');
 var solc = require('solc'); //only 0.4.24 version should be used, npm install solc@0.4.24
 var utils = require('./utils.js');
