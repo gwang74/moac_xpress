@@ -69,6 +69,7 @@ npm run start
 }
 ```
 成功启动后弹出用户操作界面，只需填写相应地址，点击按钮即可完成子链部署。
+![](https://github.com/gwang74/moac_xpress/blob/master/deploy.png)
 
 #### 子链相关合约地址contract.json
 部署成功后会生成该合约地址文件
