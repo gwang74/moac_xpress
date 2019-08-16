@@ -34,7 +34,7 @@ npm install
 [墨客区块链(MOAC BlockChain) 节点安装教程](https://blog.csdn.net/lyq13573221675/article/details/81078424)
 
 ### SCS节点启动，获取SCS帐号
-需先配置userconfig.json后，配置好后可启动子链
+需先配置userconfig.json后，配置好后可启动应用链
 
 ```javascript
 ./scsserver –password “123456” 
@@ -68,10 +68,10 @@ npm run start
 	...
 }
 ```
-成功启动后弹出用户操作界面，只需填写相应地址，点击按钮即可完成子链部署。
+成功启动后弹出用户操作界面，只需填写相应地址，点击按钮即可完应用链部署。
 ![](https://github.com/gwang74/moac_xpress/blob/master/deploy.png)
 
-#### 子链相关合约地址contract.json
+#### 应用链相关合约地址contract.json
 部署成功后会生成该合约地址文件
 ```json
 {
