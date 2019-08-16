@@ -1,16 +1,18 @@
 {
-    "baseaddr": "",
-    "privatekey": "",
-    "scs": [],
-    "vnodeVia": "",
-    "vnodeUri": "http://localhost:8545",
-    "vnodeConnectUrl": "localhost:80062",
-    "minScsRequired": "",
-    "rpcLink": "",
-    "minVnodeDeposit": 1,
-    "minScsDeposit": 1,
-    "microChainDeposit": 1,
-    "addScs": [],
-    "monitorAddr": "",
-    "monitorLink": "localhsot:8546"
+	"baseaddr": "0x7a2dc129b3d794e4e8a009c83ffd7a2412f5e326",
+	"privatekey": "86736091a441dffeb8656e731474433aaf531c4adab0497fa38d36215f44f18d",
+	"scs": [
+		"0x1519AF7010292DaE57eCc4D06c707C63fFb19cb8"
+	],
+	"vnodeVia": "0x5e2e03d1fb8aed9dbbd939fcc1a9f2aa9afdfde4",
+	"vnodeUri": "http://192.168.1.105:8545",
+	"vnodeConnectUrl": "192.168.1.105:80062",
+	"minScsRequired": "1",
+	"rpcLink": "",
+	"minVnodeDeposit": 1,
+	"minScsDeposit": 1,
+	"microChainDeposit": 1,
+	"addScs": [],
+	"monitorAddr": "",
+	"monitorLink": ""
 }
