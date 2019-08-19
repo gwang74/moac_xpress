@@ -92,13 +92,13 @@
                   <el-input v-model="configData.vnodeConnectUrl" type="text" placeholder="请输入应用链调用地址"></el-input>
                 </el-form-item>
                 <el-form-item label="代理vnode节点保证金" prop="minVnodeDeposit">
-                  <el-input v-model="configData.minVnodeDeposit" type="text" placeholder="请输入代理vnode节点保证金"></el-input>
+                  <el-input v-model="configData.minVnodeDeposit" type="number" placeholder="请输入代理vnode节点保证金"></el-input>
                 </el-form-item>
                 <el-form-item label="应用链矿池保证金" prop="minScsDeposit">
-                  <el-input v-model="configData.minScsDeposit" type="text" placeholder="请输入应用链矿池保证金"></el-input>
+                  <el-input v-model="configData.minScsDeposit" type="number" placeholder="请输入应用链矿池保证金"></el-input>
                 </el-form-item>
                 <el-form-item label="应用链合约gas费" prop="microChainDeposit">
-                  <el-input v-model="configData.microChainDeposit" type="text" placeholder="请输入应用链合约gas费"></el-input>
+                  <el-input v-model="configData.microChainDeposit" type="number" placeholder="请输入应用链合约gas费"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -227,6 +227,13 @@ export default {
         callback();
       }
     };
+    var validateDeposit = (rule, value, callback) => {
+      if (value <= 0) {
+        callback(new Error("不可小于1"));
+      } else {
+        callback();
+      }
+    }
     var validateMin = (rule, value, callback) => {
       let arr = [1, 3, 5, 7];
       if (!arr.includes(Number(value))) {
@@ -292,15 +299,15 @@ export default {
         ],
         minVnodeDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ],
         minScsDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ],
         microChainDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ]
       },
       monitorRules: {
