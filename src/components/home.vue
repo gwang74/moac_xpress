@@ -14,7 +14,7 @@
         <img src="../images/logo.png" style="height: 150px;display: flex;" />
       </div>
       <div class="topTitleBox">
-        <span>墨客子链一键发链工具</span>
+        <span>墨客应用链一键发链工具</span>
       </div>
     </section>
     <section class="content">
@@ -34,17 +34,17 @@
             配置好userconfig.json后，可启动<br>
             ./scsserver –password “123456”<br>  
             具体可参照：<br>
-            <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81125954">墨客区块链(MOAC BlockChain) 子链搭建教程</el-link><br>
+            <el-link type="primary" href="https://blog.csdn.net/lyq13573221675/article/details/81125954">墨客区块链(MOAC BlockChain) 应用链搭建教程</el-link><br>
             </p>
             <p style="margin-top: 40px;"><b>详情参考：</b><br>
             <el-link type="primary" href="https://moacdocs-chn.readthedocs.io/zh_CN/latest/subchain/%E9%83%A8%E7%BD%B2%E5%AD%90%E9%93%BE%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html">
-            部署子链前的准备工作
+            部署应用链前的准备工作
             </el-link>
             </p>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="部署子链出块">
+        <el-tab-pane label="部署应用链出块">
           <div class="content-pane">
             <div class="content-pane-left" style="margin-top: 20px;">
               <el-form
@@ -53,19 +53,19 @@
                 :model="configData"
                 ref="configData"
                 :rules="rules">
-                <el-form-item label="子链操作账号" prop="baseaddr">
-                  <el-input v-model="configData.baseaddr" type="text" placeholder="请输入子链操作账号"></el-input>
+                <el-form-item label="应用链操作账号" prop="baseaddr">
+                  <el-input v-model="configData.baseaddr" type="text" placeholder="请输入应用链操作账号"></el-input>
                 </el-form-item>
                 <el-form-item label="密钥" prop="privatekey">
                   <el-input v-model="configData.privatekey" type="password" placeholder="请输入密钥"></el-input>
                 </el-form-item>
-                <el-form-item label="所需最小子链数" prop="minScsRequired">
+                <el-form-item label="所需最小应用链数" prop="minScsRequired">
                   <el-input
                     v-model="configData.minScsRequired"
                     type="number"
                     maxlength="1"
                     @change="getScsNumber"
-                    placeholder="请输入最小子链数，当前允许值：1，3，5，7"
+                    placeholder="请输入最小应用链数，当前允许值：1，3，5，7"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="SCS节点" prop="scs">
@@ -88,17 +88,17 @@
                 <el-form-item label="代理vnode节点" prop="vnodeUri">
                   <el-input v-model="configData.vnodeUri" type="text" placeholder="请输入代理vnode节点"></el-input>
                 </el-form-item>
-                <el-form-item label="子链调用地址" prop="vnodeConnectUrl">
-                  <el-input v-model="configData.vnodeConnectUrl" type="text" placeholder="请输入子链调用地址"></el-input>
+                <el-form-item label="应用链调用地址" prop="vnodeConnectUrl">
+                  <el-input v-model="configData.vnodeConnectUrl" type="text" placeholder="请输入应用链调用地址"></el-input>
                 </el-form-item>
                 <el-form-item label="代理vnode节点保证金" prop="minVnodeDeposit">
-                  <el-input v-model="configData.minVnodeDeposit" type="text" placeholder="请输入代理vnode节点保证金"></el-input>
+                  <el-input v-model="configData.minVnodeDeposit" type="number" placeholder="请输入代理vnode节点保证金"></el-input>
                 </el-form-item>
-                <el-form-item label="子链矿池保证金" prop="minScsDeposit">
-                  <el-input v-model="configData.minScsDeposit" type="text" placeholder="请输入子链矿池保证金"></el-input>
+                <el-form-item label="应用链矿池保证金" prop="minScsDeposit">
+                  <el-input v-model="configData.minScsDeposit" type="number" placeholder="请输入应用链矿池保证金"></el-input>
                 </el-form-item>
-                <el-form-item label="子链合约gas费" prop="microChainDeposit">
-                  <el-input v-model="configData.microChainDeposit" type="text" placeholder="请输入子链合约gas费"></el-input>
+                <el-form-item label="应用链合约gas费" prop="microChainDeposit">
+                  <el-input v-model="configData.microChainDeposit" type="number" placeholder="请输入应用链合约gas费"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -116,14 +116,14 @@
               <el-form
               :model="contractData"
               ref="contractData">
-                <span>完成部署后子链合约相关地址</span>
+                <span>完成部署后应用链合约相关地址</span>
                 <el-form-item label="Vnode矿池合约地址">
                   <el-input v-model="contractData[0].vnodePoolAddr" type="text" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="子链矿池地址">
+                <el-form-item label="应用链矿池地址">
                   <el-input v-model="contractData[1].scsPoolAddr" type="text" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="子链合约地址">
+                <el-form-item label="应用链合约地址">
                   <el-input v-model="contractData[2].microChainAddr" type="text" readonly></el-input>
                 </el-form-item>
               </el-form>
@@ -169,7 +169,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="添加监听子链节点">
+        <el-tab-pane label="添加监听应用链节点">
           <div class="content-pane">
             <div class="content-pane-left"  style="margin-top: 20px;">
               <el-form
@@ -178,11 +178,11 @@
                 :model="monitor"
                 ref="monitor"
                 :rules="monitorRules">
-                <el-form-item label="监听子链账号" prop="monitorAddr">
-                  <el-input v-model="monitor.monitorAddr" type="text" placeholder="请输入监听子链账号"></el-input>
+                <el-form-item label="监听应用链账号" prop="monitorAddr">
+                  <el-input v-model="monitor.monitorAddr" type="text" placeholder="请输入监听应用链账号"></el-input>
                 </el-form-item>
-                <el-form-item label="监听子链rpc接口" prop="monitorLink">
-                  <el-input v-model="monitor.monitorLink" type="text" placeholder="请输入监听子链rpc接口"></el-input>
+                <el-form-item label="监听应用链rpc接口" prop="monitorLink">
+                  <el-input v-model="monitor.monitorLink" type="text" placeholder="请输入监听应用链rpc接口"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -197,7 +197,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="关闭子链">
+        <el-tab-pane label="关闭应用链">
           <div class="content-pane">
             <el-button type="primary" @click="onClose" class="button" :disabled="deployButton">一键关闭</el-button>
           </div>
@@ -215,7 +215,7 @@ export default {
   data() {
     var validateScs = (rule, value, callback) => {
       if (value.includes("")) {
-        callback(new Error("请填写所有所需子链"));
+        callback(new Error("请填写所有所需应用链"));
       } else {
         callback();
       }
@@ -227,6 +227,13 @@ export default {
         callback();
       }
     };
+    var validateDeposit = (rule, value, callback) => {
+      if (value <= 0) {
+        callback(new Error("不可小于1"));
+      } else {
+        callback();
+      }
+    }
     var validateMin = (rule, value, callback) => {
       let arr = [1, 3, 5, 7];
       if (!arr.includes(Number(value))) {
@@ -292,15 +299,15 @@ export default {
         ],
         minVnodeDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ],
         minScsDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ],
         microChainDeposit: [
           { required: true, message: "不可为空", trigger: "blur" },
-          { validator: validateNumber, trigger: "blur" }
+          { validator: validateDeposit, trigger: "blur" }
         ]
       },
       monitorRules: {
@@ -459,7 +466,7 @@ export default {
           function(res) {
             console.log(res);
             if (res.status === 200) {
-              this.setAlert(true,"info", "开始添加子链，请稍等!");
+              this.setAlert(true,"info", "开始添加应用链，请稍等!");
               this.deployButton = true;
               this.$http.post(this.url + "/addScs").then(
                 function(res) {
@@ -482,7 +489,7 @@ export default {
                 },
                 function(res) {
                   console.log(res.status);
-                  this.setAlert(true,"error", "添加子链失败!");
+                  this.setAlert(true,"error", "添加应用链失败!");
                   this.deployButton = false;
                 }
               );
@@ -504,7 +511,7 @@ export default {
               function(res) {
                 console.log(res);
                 if (res.status === 200) {
-                  this.setAlert(true,"info", "开始添加监听子链，请稍等！");
+                  this.setAlert(true,"info", "开始添加监听应用链，请稍等！");
                   this.deployButton = true;
                   this.$http.post(this.url + "/addMonitor").then(
                     function(res) {
@@ -525,7 +532,7 @@ export default {
                     },
                     function(res) {
                       console.log(res.status);
-                      this.setAlert(true,"error", "添加监听子链失败!");
+                      this.setAlert(true,"error", "添加监听应用链失败!");
                       this.deployButton = false;
                     }
                   );
@@ -555,12 +562,12 @@ export default {
         },
         function() {
           console.log("请求失败处理");
-          this.setAlert(true,"error", "获取子链相关合约地址失败!");
+          this.setAlert(true,"error", "获取应用链相关合约地址失败!");
         }
       );
     },
     onClose() {
-      this.setAlert(true,"info", "正在关闭子链，请稍等...");
+      this.setAlert(true,"info", "正在关闭应用链，请稍等...");
       this.deployButton = true;
       this.$http.post(this.url + "/closeMicroChain", this.initConfig, {emulateJSON: true}).then(
           function(res) {
@@ -573,7 +580,7 @@ export default {
           },
           function(res) {
             console.log(res.status);
-            this.setAlert(true,"error", "关闭子链失败!");
+            this.setAlert(true,"error", "关闭应用链失败!");
             this.deployButton = false;
           }
         );
@@ -607,7 +614,7 @@ export default {
   height: 180px;
   .topTitleBox {
     float: right;
-    width: 300px;
+    width: 400px;
     margin-right: 200px;
     font-size: 30px;
     top: 65px;
