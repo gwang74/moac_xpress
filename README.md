@@ -92,3 +92,13 @@ npm run start
 具体可查看
 [墨客链中文文档](https://moacdocs-chn.readthedocs.io/zh_CN/latest/index.html)
 [应用链搭建教程](https://blog.csdn.net/lyq13573221675/article/details/81125954)
+
+
+
+#### SWTC&MOAC开发者社区
+
+项目讨论的QQ群：568285439
+
+Telegram: https://t.me/moacblockchain
+
+提案发起（Submit proposal）： https://github.com/JCCDex/ProjectFundingProposal/issues
